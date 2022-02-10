@@ -1,0 +1,13 @@
+              CASH RECEIPT
+            SUPERMARKET 123
+      12, MILKYWAY Galaxy / Earth
+           Tel: 123-456-7890
+CASHIER: ?1520          DATE: 10/02/2022
+                        TIME: 13:33:52
+-----------------------------------------
+QTY DESCRIPTION            PRICE   TOTAL
+1   sugar                  47.84   47.84
+5   bread                  19.55   97.75
+1   banana                 17.06   17.06
+=========================================
+TAXABLE TOT.                      162.65

@@ -1,0 +1,5 @@
+1 milk 10.12 false
+2 bread 20.58 false
+3 sugar 50.36 true
+4 tomato 12.59 false
+5 banana 17.96 true
