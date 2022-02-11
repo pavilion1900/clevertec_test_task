@@ -78,19 +78,20 @@ Card-1234 означает, что была предъявлена скидоч�
 ## Инструкция по запуску приложения:
 1. Необходимо запустить **class CheckRunner**
 2. Появится меню
->Menu:
-    
-    0 Make order fixed settings
-    1 Make order
-    2 Find all items
-    3 Find all cards
-    4 Exit program
-    Select 
 
+~~~
+Menu:    
+0. Make order fixed settings
+1. Make order
+2. Find all items
+3. Find all cards
+4. Exit program
+Select 
+~~~
 3. Далее выбрать **0** и ввести набор параметров 
-
->3-8 2-5 5-4 card-1234
-
+~~~
+3-8 2-5 5-4 card-1234
+~~~
 После сформируется чек в косоле.
 
 Пункт меню **0. Make order fixed settings** 
