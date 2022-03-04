@@ -1,6 +1,6 @@
 package ru.clevertec.store;
 
-import ru.clevertec.models.Card;
+import ru.clevertec.model.Card;
 
 import java.io.*;
 import java.util.*;

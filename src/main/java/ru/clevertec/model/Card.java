@@ -1,4 +1,4 @@
-package ru.clevertec.models;
+package ru.clevertec.model;
 
 import java.util.Objects;
 

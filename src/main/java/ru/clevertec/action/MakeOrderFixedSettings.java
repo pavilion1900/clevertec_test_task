@@ -1,8 +1,8 @@
-package ru.clevertec.actions;
+package ru.clevertec.action;
 
-import ru.clevertec.logics.*;
+import ru.clevertec.logic.*;
 import ru.clevertec.input.Input;
-import ru.clevertec.models.*;
+import ru.clevertec.model.*;
 import ru.clevertec.output.Output;
 import ru.clevertec.parse.*;
 import ru.clevertec.store.Store;

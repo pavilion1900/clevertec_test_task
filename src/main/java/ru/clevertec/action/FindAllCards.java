@@ -1,24 +1,24 @@
-package ru.clevertec.actions;
+package ru.clevertec.action;
 
 import ru.clevertec.input.Input;
 import ru.clevertec.output.Output;
 import ru.clevertec.store.Store;
 
-public class FindAllItems implements UserAction {
+public class FindAllCards implements UserAction {
     private final Output out;
 
-    public FindAllItems(Output out) {
+    public FindAllCards(Output out) {
         this.out = out;
     }
 
     @Override
     public String name() {
-        return "Find all items";
+        return "Find all cards";
     }
 
     @Override
     public boolean execute(Input input, Store itemStore, Store cardStore) {
-        itemStore.findAll().forEach(out::println);
+        cardStore.findAll().forEach(out::println);
         return true;
     }
 }

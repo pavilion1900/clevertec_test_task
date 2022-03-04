@@ -1,8 +1,8 @@
 package ru.clevertec;
 
-import ru.clevertec.actions.*;
+import ru.clevertec.action.*;
 import ru.clevertec.input.*;
-import ru.clevertec.models.Card;
+import ru.clevertec.model.Card;
 import ru.clevertec.output.*;
 import ru.clevertec.store.*;
 

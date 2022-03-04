@@ -1,4 +1,4 @@
-package ru.clevertec.actions;
+package ru.clevertec.action;
 
 import ru.clevertec.input.Input;
 import ru.clevertec.store.Store;

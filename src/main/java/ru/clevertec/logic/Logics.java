@@ -1,7 +1,7 @@
-package ru.clevertec.logics;
+package ru.clevertec.logic;
 
 import ru.clevertec.format.*;
-import ru.clevertec.models.Item;
+import ru.clevertec.model.Item;
 import ru.clevertec.output.Output;
 
 import java.io.BufferedReader;

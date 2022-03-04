@@ -1,6 +1,6 @@
 package ru.clevertec.store;
 
-import ru.clevertec.models.Item;
+import ru.clevertec.model.Item;
 
 import java.io.*;
 import java.math.*;

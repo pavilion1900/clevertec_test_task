@@ -1,6 +1,6 @@
 package ru.clevertec.format;
 
-import ru.clevertec.models.Item;
+import ru.clevertec.model.Item;
 import ru.clevertec.output.Output;
 
 import java.math.*;

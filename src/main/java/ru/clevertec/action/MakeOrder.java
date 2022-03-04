@@ -1,7 +1,7 @@
-package ru.clevertec.actions;
+package ru.clevertec.action;
 
 import ru.clevertec.input.Input;
-import ru.clevertec.logics.Logics;
+import ru.clevertec.logic.Logics;
 import ru.clevertec.output.Output;
 import ru.clevertec.parse.*;
 import ru.clevertec.store.Store;

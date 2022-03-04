@@ -1,6 +1,6 @@
 package ru.clevertec.parse;
 
-import ru.clevertec.models.*;
+import ru.clevertec.model.*;
 
 import java.util.*;
 

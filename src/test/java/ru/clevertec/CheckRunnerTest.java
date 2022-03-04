@@ -3,7 +3,7 @@ package ru.clevertec;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import ru.clevertec.actions.*;
+import ru.clevertec.action.*;
 import ru.clevertec.input.*;
 import ru.clevertec.output.*;
 import ru.clevertec.store.*;
