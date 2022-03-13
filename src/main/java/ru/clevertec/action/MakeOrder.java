@@ -5,6 +5,7 @@ import ru.clevertec.logic.Logics;
 import ru.clevertec.output.Output;
 import ru.clevertec.parse.*;
 import ru.clevertec.store.Store;
+import ru.clevertec.validator.*;
 
 public class MakeOrder implements UserAction {
     private final Output out;
@@ -20,8 +21,10 @@ public class MakeOrder implements UserAction {
 
     @Override
     public boolean execute(Input input, Store itemStore, Store cardStore) {
-        itemStore.loadDataFromFile("src/main/java/ru/clevertec/doc/Items.txt");
-        cardStore.loadDataFromFile("src/main/java/ru/clevertec/doc/Cards.txt");
+        new ValidateItemWithRegEx().validate();
+        new ValidateCardWithRegEx().validate();
+        itemStore.loadDataFromFile("src/main/resources/rightItemData.txt");
+        cardStore.loadDataFromFile("src/main/resources/rightCardData.txt");
         String order = input.askStr("Enter your order ");
         String[] array = order.split(" ");
         ParseOrder parseOrder = new ParseOrderArray(array, itemStore.getMap(), cardStore.getMap());

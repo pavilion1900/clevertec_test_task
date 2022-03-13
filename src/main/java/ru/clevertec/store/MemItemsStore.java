@@ -19,7 +19,7 @@ public class MemItemsStore implements Store<Item> {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = in.readLine()) != null) {
-                String[] array = line.split(" ");
+                String[] array = line.split(";");
                 if (array.length == 0 || array.length < 4) {
                     throw new IllegalArgumentException("Check file with items");
                 }
