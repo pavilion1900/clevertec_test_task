@@ -18,7 +18,7 @@ public class ValidateItemWithRegEx implements Validate {
             String line;
             while ((line = in.readLine()) != null) {
                 String itemRegex = "^(100|\\d\\d|[1-9]);(([A-Z][a-z]{2,29})|"
-                        + "([А-ЯЁ][а-яё]{2,29}));(100|\\d\\d|[1-9]).\\d{2};(true|false)";
+                        + "([А-ЯЁ][а-яё]{2,29}));((100\\.00)|(\\d\\d|[1-9])\\.\\d{2});(true|false)";
                 if (!line.matches(itemRegex)) {
                     outInvalidData.println(line);
                 } else {
@@ -28,5 +28,9 @@ public class ValidateItemWithRegEx implements Validate {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new ValidateItemWithRegEx().validate();
     }
 }

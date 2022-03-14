@@ -13,5 +13,6 @@
 20;Bread;20.58;false
 80;Bread;20.58;false
 89;Хлеб;99.15;true
+89;Хлеб;100.00;true
 3;Sugar;50.36;true
 5;Banana;17.96;true
