@@ -45,3 +45,26 @@ sourceSets {
         }
     }
 }
+
+class FileDownloader extends DefaultTask {
+    @Input
+    String sourceUrl
+    @OutputFile
+    File target
+
+    @TaskAction
+    void download() {
+        try {
+            ant.get(src: sourceUrl, dest: target)
+        } catch (Exception e) {
+            println e
+        }
+    }
+}
+
+task download(type: FileDownloader){
+    sourceUrl = 'https://i.ibb.co/X3VfJ0w/2022-03-09-00-42-30.png'
+    target = new File('src/main/resources/imageCheck.png')
+}
+
+build.dependsOn download
