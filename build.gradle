@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'custom-task'
 }
 
 repositories {
@@ -38,10 +39,6 @@ jar {
     }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-        }
-    }
+wrapper {
+    gradleVersion "7.4"
 }
