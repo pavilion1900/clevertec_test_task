@@ -20,7 +20,7 @@ public class FormatTxt implements Format {
     @Override
     public void setFormat() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
-                "src/main/java/ru/clevertec/doc/Check.txt")))) {
+                "src/main/resources/Check.txt")))) {
             out.println(String.join(System.lineSeparator(),
                     RECEIPT, SUPERMARKET, ADDRESS, TEL, DATE, TIME, LINE, HEAD));
             for (Item item : list) {

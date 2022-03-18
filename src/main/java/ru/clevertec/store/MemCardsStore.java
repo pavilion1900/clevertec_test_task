@@ -18,7 +18,7 @@ public class MemCardsStore implements Store<Card> {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = in.readLine()) != null) {
-                String[] array = line.split(" ");
+                String[] array = line.split(";");
                 if (array.length == 0 || array.length < 2) {
                     throw new IllegalArgumentException("Check file with cards");
                 }

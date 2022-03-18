@@ -50,7 +50,7 @@ public class Logics {
 
     public void printConsole() {
         try (BufferedReader in = new BufferedReader(new FileReader(
-                "src/main/java/ru/clevertec/doc/Check.txt"))) {
+                "src/main/resources/Check.txt"))) {
             in.lines().forEach(out::println);
         } catch (IOException e) {
             e.printStackTrace();
