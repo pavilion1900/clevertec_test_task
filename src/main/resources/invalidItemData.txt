@@ -32,3 +32,6 @@ n4;Bread;20.58;true
 3;SuGaR;50.36;false
 4;TOMATO;12.59;true
 5;ba;17.96;false
+00;Хлеб;99.15;true
+02;Хлеб;00.11;true
+5;Banana;17.96;truetrue
