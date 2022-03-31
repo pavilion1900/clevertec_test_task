@@ -17,8 +17,8 @@ public class CustomArrayList<E> implements CustomList<E> {
 
     @Override
     public void setMaxSize(int maxSize) {
-        container = copyOf(container, maxSize);
         maxCapacity = true;
+        container = copyOf(container, maxSize);
     }
 
     @Override
@@ -110,8 +110,9 @@ public class CustomArrayList<E> implements CustomList<E> {
     }
 
     @Override
-    public E[] toArray(E[] array) {
-        return (E[]) copyOf(container, size);
+    public <T> T[] toArray(T[] array) {
+        System.arraycopy(container, 0, array, 0, size);
+        return array;
     }
 
     @Override
@@ -141,8 +142,8 @@ public class CustomArrayList<E> implements CustomList<E> {
                 System.out.println("Max capacity " + container.length + " for this collection");
                 result = false;
             } else {
-                int oldCapacity = container.length;
-                container = copyOf(container, oldCapacity * 2);
+                int newCapacity = container.length * 2;
+                container = copyOf(container, newCapacity);
             }
         }
         return result;
@@ -155,10 +156,14 @@ public class CustomArrayList<E> implements CustomList<E> {
         return index;
     }
 
-    private E[] copyOf(E[] array, int newLength) {
-        E[] newArray = (E[]) new Object[newLength];
-        System.arraycopy(array, 0, newArray, 0, newLength);
-        return newArray;
+    private E[] copyOf(E[] original, int newLength) {
+        E[] copy = (E[]) new Object[newLength];
+        if (maxCapacity) {
+            System.arraycopy(original, 0, copy, 0, newLength);
+        } else {
+            System.arraycopy(original, 0, copy, 0, size);
+        }
+        return copy;
     }
 
     @Override

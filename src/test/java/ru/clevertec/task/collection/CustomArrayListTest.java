@@ -116,6 +116,20 @@ public class CustomArrayListTest {
     }
 
     @Test
+    public void checkAddMoreThanDefaultCapacity() {
+        list.add(11);
+        list.add(52);
+        list.add(61);
+        list.add(72);
+        list.add(83);
+        list.add(95);
+        list.add(105);
+        list.add(112);
+        list.add(122);
+        Assert.assertEquals(12, list.size());
+    }
+
+    @Test
     public void checkAddWithIndex() {
         list = new CustomArrayList<>();
         list.add(null);
@@ -202,11 +216,10 @@ public class CustomArrayListTest {
 
     @Test
     public void checkToArray() {
-        Integer[] array = {70, 80};
-        list.addAll(array);
-        Assert.assertEquals(5, list.size());
-        Assert.assertEquals(Integer.valueOf(33), list.get(1));
-        Assert.assertEquals(Integer.valueOf(80), list.get(4));
+        Integer[] array = list.toArray(new Integer[list.size()]);
+        Assert.assertEquals(3, array.length);
+        Assert.assertEquals(Integer.valueOf(22), array[0]);
+        Assert.assertEquals(Integer.valueOf(33), array[1]);
     }
 
     @Test

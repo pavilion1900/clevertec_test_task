@@ -21,7 +21,7 @@ public interface CustomList<E> extends CustomIterable<E> {
 
     E get(int index);
 
-    E[] toArray(E[] array);
+    <T> T[] toArray(T[] array);
 
     int size();
 
