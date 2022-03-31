@@ -1,11 +1,12 @@
 package ru.clevertec.store;
 
-import java.util.*;
+import ru.clevertec.task.collection.CustomList;
+import java.util.Map;
 
 public interface Store<T> {
     Map<Integer, T> getMap();
 
     void loadDataFromFile(String path);
 
-    List<T> findAll();
+    CustomList<T> findAll();
 }

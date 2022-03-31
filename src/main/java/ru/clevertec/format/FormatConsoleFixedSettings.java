@@ -2,17 +2,17 @@ package ru.clevertec.format;
 
 import ru.clevertec.model.Item;
 import ru.clevertec.output.Output;
+import ru.clevertec.task.collection.CustomList;
 
 import java.math.*;
-import java.util.List;
 
 public class FormatConsoleFixedSettings implements Format {
-    private List<Item> list;
+    private CustomList<Item> list;
     private int discount;
     private BigDecimal value;
     private final Output out;
 
-    public FormatConsoleFixedSettings(List<Item> list, int discount, BigDecimal value, Output out) {
+    public FormatConsoleFixedSettings(CustomList<Item> list, int discount, BigDecimal value, Output out) {
         this.list = list;
         this.discount = discount;
         this.value = value;
@@ -23,31 +23,31 @@ public class FormatConsoleFixedSettings implements Format {
     public void setFormat() {
         out.println(String.join(System.lineSeparator(),
                 RECEIPT, SUPERMARKET, ADDRESS, TEL, DATE, TIME, LINE, HEAD));
-        for (Item item : list) {
+        for (int i = 0; i < list.size(); i++) {
             String elem;
-            if (item.isPromotion() && item.getQuantity() > 5) {
+            if (list.get(i).isPromotion() && list.get(i).getQuantity() > 5) {
                 elem = String.format("%-4d%-15s%5s%8.2f%8.2f",
-                        item.getQuantity(),
-                        item.getName(),
+                        list.get(i).getQuantity(),
+                        list.get(i).getName(),
                         "sale",
-                        item.getPrice().multiply(BigDecimal.valueOf(0.9)),
-                        item.getPrice().multiply(BigDecimal.valueOf(0.9))
+                        list.get(i).getPrice().multiply(BigDecimal.valueOf(0.9)),
+                        list.get(i).getPrice().multiply(BigDecimal.valueOf(0.9))
                                 .setScale(2, RoundingMode.HALF_UP)
-                                .multiply(BigDecimal.valueOf(item.getQuantity()))
+                                .multiply(BigDecimal.valueOf(list.get(i).getQuantity()))
                 );
             } else {
                 elem = String.format("%-4d%-20s%8.2f%8.2f",
-                        item.getQuantity(),
-                        item.getName(),
-                        item.getPrice().multiply(new BigDecimal(100)
+                        list.get(i).getQuantity(),
+                        list.get(i).getName(),
+                        list.get(i).getPrice().multiply(new BigDecimal(100)
                                         .subtract(new BigDecimal(discount))
                                         .divide(new BigDecimal(100)))
                                 .setScale(2, RoundingMode.HALF_UP),
-                        item.getPrice().multiply(new BigDecimal(100)
+                        list.get(i).getPrice().multiply(new BigDecimal(100)
                                         .subtract(new BigDecimal(discount))
                                         .divide(new BigDecimal(100)))
                                 .setScale(2, RoundingMode.HALF_UP)
-                                .multiply(BigDecimal.valueOf(item.getQuantity()))
+                                .multiply(BigDecimal.valueOf(list.get(i).getQuantity()))
                 );
             }
             out.println(elem);

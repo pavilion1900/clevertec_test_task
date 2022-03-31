@@ -1,6 +1,8 @@
 package ru.clevertec.store;
 
 import ru.clevertec.model.Item;
+import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
 import java.math.*;
@@ -33,7 +35,13 @@ public class MemItemsStore implements Store<Item> {
     }
 
     @Override
-    public List<Item> findAll() {
-        return new ArrayList<>(map.values());
+    public CustomList<Item> findAll() {
+        Collection<Item> values = map.values();
+        Iterator<Item> iterator = values.iterator();
+        CustomList<Item> list = new CustomArrayList<>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
     }
 }

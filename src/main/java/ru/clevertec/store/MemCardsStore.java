@@ -1,9 +1,14 @@
 package ru.clevertec.store;
 
 import ru.clevertec.model.Card;
+import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MemCardsStore implements Store<Card> {
     private Map<Integer, Card> map = new HashMap<>();
@@ -31,7 +36,13 @@ public class MemCardsStore implements Store<Card> {
     }
 
     @Override
-    public List<Card> findAll() {
-        return new ArrayList<>(map.values());
+    public CustomList<Card> findAll() {
+        Collection<Card> values = map.values();
+        Iterator<Card> iterator = values.iterator();
+        CustomList<Card> list = new CustomArrayList<>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
     }
 }

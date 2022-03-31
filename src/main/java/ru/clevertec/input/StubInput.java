@@ -1,12 +1,12 @@
 package ru.clevertec.input;
 
-import java.util.List;
+import ru.clevertec.task.collection.CustomList;
 
 public class StubInput implements Input {
-    private List<String> list;
+    private CustomList<String> list;
     private int position = 0;
 
-    public StubInput(List<String> list) {
+    public StubInput(CustomList<String> list) {
         this.list = list;
     }
 

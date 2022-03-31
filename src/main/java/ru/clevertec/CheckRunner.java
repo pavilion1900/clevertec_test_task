@@ -5,8 +5,8 @@ import ru.clevertec.input.*;
 import ru.clevertec.model.Card;
 import ru.clevertec.output.*;
 import ru.clevertec.store.*;
-
-import java.util.*;
+import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.task.collection.CustomList;
 
 public class CheckRunner {
     private final Output out;
@@ -15,7 +15,8 @@ public class CheckRunner {
         this.out = out;
     }
 
-    public void init(Input input, Store itemStore, Store cardStore, List<UserAction> actions) {
+    public void init(Input input, Store itemStore, Store cardStore,
+                     CustomList<UserAction> actions) {
         boolean run = true;
         while (run) {
             showMenu(actions);
@@ -29,7 +30,7 @@ public class CheckRunner {
         }
     }
 
-    private void showMenu(List<UserAction> actions) {
+    private void showMenu(CustomList<UserAction> actions) {
         out.println("Menu:");
         for (int i = 0; i < actions.size(); i++) {
             out.println(i + ". " + actions.get(i).name());
@@ -42,13 +43,12 @@ public class CheckRunner {
         Input input = new ValidateInput(out, new ConsoleInput());
         Store itemStore = new MemItemsStore();
         Store<Card> cardStore = new MemCardsStore();
-        List<UserAction> actions = List.of(
-                new MakeOrderFixedSettings(out),
-                new MakeOrder(out),
-                new FindAllItems(out),
-                new FindAllCards(out),
-                new ExitProgram()
-        );
+        CustomList<UserAction> actions = new CustomArrayList<>();
+        actions.add(new MakeOrderFixedSettings(out));
+        actions.add(new MakeOrder(out));
+        actions.add(new FindAllItems(out));
+        actions.add(new FindAllCards(out));
+        actions.add(new ExitProgram());
         checkRunner.init(input, itemStore, cardStore, actions);
     }
 }
