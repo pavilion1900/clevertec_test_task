@@ -205,6 +205,17 @@ public class CustomArrayListTest {
     }
 
     @Test
+    public void checkFind2() {
+        list.add(null);
+        list.add(60);
+        list.add(null);
+        list.add(70);
+        Assert.assertEquals(3, list.find(null));
+        Assert.assertEquals(7, list.size());
+        Assert.assertEquals(-1, list.find(4444));
+    }
+
+    @Test
     public void checkGetByCorrectIndex() {
         Assert.assertEquals(Integer.valueOf(22), list.get(0));
     }

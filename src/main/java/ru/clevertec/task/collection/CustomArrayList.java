@@ -94,10 +94,19 @@ public class CustomArrayList<E> implements CustomList<E> {
     @Override
     public int find(E value) {
         int result = -1;
-        for (int i = 0; i < size; i++) {
-            if (container[i].equals(value)) {
-                result = i;
-                break;
+        if (value == null) {
+            for (int i = 0; i < size; i++) {
+                if (container[i] == null) {
+                    result = i;
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (value.equals(container[i])) {
+                    result = i;
+                    break;
+                }
             }
         }
         return result;
