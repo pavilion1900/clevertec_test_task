@@ -48,8 +48,18 @@ public class CustomArrayListTest {
         Assert.assertEquals(Integer.valueOf(22), iterator.next());
         iterator.remove();
         Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals(Integer.valueOf(33), iterator.next());
+        Assert.assertTrue(iterator.hasNext());
         Assert.assertEquals(Integer.valueOf(44), iterator.next());
         Assert.assertFalse(iterator.hasNext());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void checkIteratorRemoveWithException() {
+        CustomIterator<Integer> iterator = list.getIterator();
+        iterator.remove();
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals(Integer.valueOf(22), iterator.next());
     }
 
     @Test

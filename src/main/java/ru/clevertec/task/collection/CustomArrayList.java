@@ -202,7 +202,11 @@ public class CustomArrayList<E> implements CustomList<E> {
 
             @Override
             public void remove() {
-                CustomArrayList.this.remove(cursor);
+                if (cursor == 0) {
+                    throw new IllegalStateException();
+                }
+                CustomArrayList.this.remove(cursor - 1);
+                cursor--;
                 expectedModCount = modCount;
             }
 
