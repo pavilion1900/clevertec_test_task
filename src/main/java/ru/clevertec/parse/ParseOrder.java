@@ -1,11 +1,10 @@
 package ru.clevertec.parse;
 
 import ru.clevertec.model.Item;
-
-import java.util.List;
+import ru.clevertec.task.collection.CustomList;
 
 public interface ParseOrder {
-    List<Item> getList();
+    CustomList<Item> getList();
 
     int getDiscount();
 }

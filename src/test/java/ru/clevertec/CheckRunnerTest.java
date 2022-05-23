@@ -7,8 +7,8 @@ import ru.clevertec.action.*;
 import ru.clevertec.input.*;
 import ru.clevertec.output.*;
 import ru.clevertec.store.*;
-
-import java.util.List;
+import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.task.collection.CustomList;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -20,10 +20,13 @@ public class CheckRunnerTest {
     @Test
     public void whenExit() {
         Output out = new StubOutput();
-        Input in = new StubInput(List.of("0"));
+        CustomList<String> list = new CustomArrayList<>();
+        list.add("0");
+        Input in = new StubInput(list);
         Store itemStore = new MemItemsStore();
         Store cardStore = new MemCardsStore();
-        List<UserAction> actions = List.of(new ExitProgram());
+        CustomList<UserAction> actions = new CustomArrayList<>();
+        actions.add(new ExitProgram());
         new CheckRunner(out).init(in, itemStore, cardStore, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString(), is(
@@ -35,10 +38,14 @@ public class CheckRunnerTest {
     @Test
     public void whenInvalidExit() {
         Output out = new StubOutput();
-        Input in = new StubInput(List.of("1", "0"));
+        CustomList<String> list = new CustomArrayList<>();
+        list.add("1");
+        list.add("0");
+        Input in = new StubInput(list);
         Store itemStore = new MemItemsStore();
         Store cardStore = new MemCardsStore();
-        List<UserAction> actions = List.of(new ExitProgram());
+        CustomList<UserAction> actions = new CustomArrayList<>();
+        actions.add(new ExitProgram());
         new CheckRunner(out).init(in, itemStore, cardStore, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString(), is(
@@ -53,10 +60,16 @@ public class CheckRunnerTest {
     @Test(expected = IllegalArgumentException.class)
     public void whenOrderIsEmpty() {
         Output out = new StubOutput();
-        Input in = new StubInput(List.of("0", "", "1"));
+        CustomList<String> list = new CustomArrayList<>();
+        list.add("0");
+        list.add("");
+        list.add("1");
+        Input in = new StubInput(list);
         Store itemStore = new MemItemsStore();
         Store cardStore = new MemCardsStore();
-        List<UserAction> actions = List.of(new MakeOrderFixedSettings(out), new ExitProgram());
+        CustomList<UserAction> actions = new CustomArrayList<>();
+        actions.add(new MakeOrderFixedSettings(out));
+        actions.add(new ExitProgram());
         new CheckRunner(out).init(in, itemStore, cardStore, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString(), is(
@@ -68,10 +81,16 @@ public class CheckRunnerTest {
     @Test(expected = IllegalArgumentException.class)
     public void whenEnterNotExistItem() {
         Output out = new StubOutput();
-        Input in = new StubInput(List.of("0", "3-8 2-5 50-7 card-1234", "1"));
+        CustomList<String> list = new CustomArrayList<>();
+        list.add("0");
+        list.add("3-8 2-5 50-7 card-1234");
+        list.add("1");
+        Input in = new StubInput(list);
         Store itemStore = new MemItemsStore();
         Store cardStore = new MemCardsStore();
-        List<UserAction> actions = List.of(new MakeOrderFixedSettings(out), new ExitProgram());
+        CustomList<UserAction> actions = new CustomArrayList<>();
+        actions.add(new MakeOrderFixedSettings(out));
+        actions.add(new ExitProgram());
         new CheckRunner(out).init(in, itemStore, cardStore, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString(), is(

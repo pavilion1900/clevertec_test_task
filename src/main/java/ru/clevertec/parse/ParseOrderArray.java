@@ -1,8 +1,10 @@
 package ru.clevertec.parse;
 
 import ru.clevertec.model.*;
+import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.task.collection.CustomList;
 
-import java.util.*;
+import java.util.Map;
 
 public class ParseOrderArray implements ParseOrder {
     private String[] args;
@@ -18,8 +20,8 @@ public class ParseOrderArray implements ParseOrder {
     }
 
     @Override
-    public List<Item> getList() {
-        List<Item> list = new ArrayList<>();
+    public CustomList<Item> getList() {
+        CustomList<Item> list = new CustomArrayList<>();
         if (args.length == 0) {
             throw new IllegalArgumentException("Order is empty");
         }
