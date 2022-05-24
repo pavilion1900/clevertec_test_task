@@ -1,5 +1,7 @@
 package ru.clevertec.task.collection;
 
+import java.util.stream.Stream;
+
 public class CustomArrayList<E> implements CustomList<E> {
     private static final int DEFAULT_CAPACITY = 10;
     private boolean maxCapacity;
@@ -142,6 +144,13 @@ public class CustomArrayList<E> implements CustomList<E> {
                 }
             }
         }
+    }
+
+    @Override
+    public Stream<E> stream() {
+        E[] array = (E[]) new Object[size];
+        System.arraycopy(container, 0, array, 0, size);
+        return Stream.of(array);
     }
 
     private boolean grow() {

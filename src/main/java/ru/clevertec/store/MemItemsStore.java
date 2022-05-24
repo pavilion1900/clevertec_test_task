@@ -6,7 +6,9 @@ import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
 import java.math.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class MemItemsStore implements Store<Item> {
     private Map<Integer, Item> map = new HashMap<>();
@@ -35,13 +37,10 @@ public class MemItemsStore implements Store<Item> {
     }
 
     @Override
-    public CustomList<Item> findAll() {
-        Collection<Item> values = map.values();
-        Iterator<Item> iterator = values.iterator();
-        CustomList<Item> list = new CustomArrayList<>();
-        while (iterator.hasNext()) {
-            list.add(iterator.next());
-        }
-        return list;
+    public Optional<CustomList<Item>> findAll() {
+        CustomList<Item> listOfItems = new CustomArrayList<>();
+        map.values().stream()
+                .forEach(listOfItems::add);
+        return Optional.of(listOfItems);
     }
 }

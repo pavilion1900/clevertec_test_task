@@ -3,6 +3,7 @@ package ru.clevertec;
 import ru.clevertec.action.*;
 import ru.clevertec.input.*;
 import ru.clevertec.model.Card;
+import ru.clevertec.model.Item;
 import ru.clevertec.output.*;
 import ru.clevertec.store.*;
 import ru.clevertec.task.collection.CustomArrayList;
@@ -41,7 +42,7 @@ public class CheckRunner {
         Output out = new ConsoleOutput();
         CheckRunner checkRunner = new CheckRunner(out);
         Input input = new ValidateInput(out, new ConsoleInput());
-        Store itemStore = new MemItemsStore();
+        Store<Item> itemStore = new MemItemsStore();
         Store<Card> cardStore = new MemCardsStore();
         CustomList<UserAction> actions = new CustomArrayList<>();
         actions.add(new MakeOrderFixedSettings(out));

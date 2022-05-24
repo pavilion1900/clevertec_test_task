@@ -6,6 +6,9 @@ import ru.clevertec.output.Output;
 import ru.clevertec.store.Store;
 import ru.clevertec.task.collection.CustomList;
 
+import java.util.Comparator;
+import java.util.Optional;
+
 public class FindAllItems implements UserAction {
     private final Output out;
 
@@ -20,9 +23,11 @@ public class FindAllItems implements UserAction {
 
     @Override
     public boolean execute(Input input, Store itemStore, Store cardStore) {
-        CustomList<Item> list = itemStore.findAll();
-        for (int i = 0; i < list.size(); i++) {
-            out.println(list.get(i));
+        Optional<CustomList<Item>> optionalOfItems = itemStore.findAll();
+        if (optionalOfItems.isPresent()) {
+            optionalOfItems.get().stream()
+                    .sorted(Comparator.comparing(Item::getId))
+                    .forEach(out::println);
         }
         return true;
     }
