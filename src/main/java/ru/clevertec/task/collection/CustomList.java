@@ -26,4 +26,8 @@ public interface CustomList<E> extends CustomIterable<E> {
     int size();
 
     void trim();
+
+    boolean equals(Object o);
+
+    int hashCode();
 }

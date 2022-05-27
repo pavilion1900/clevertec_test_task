@@ -5,13 +5,10 @@ import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class MemCardsStore implements Store<Card> {
-    private Map<Integer, Card> map = new HashMap<>();
+    private Map<Integer, Card> map = new LinkedHashMap<>();
 
     @Override
     public Map<Integer, Card> getMap() {
@@ -36,13 +33,10 @@ public class MemCardsStore implements Store<Card> {
     }
 
     @Override
-    public CustomList<Card> findAll() {
-        Collection<Card> values = map.values();
-        Iterator<Card> iterator = values.iterator();
-        CustomList<Card> list = new CustomArrayList<>();
-        while (iterator.hasNext()) {
-            list.add(iterator.next());
-        }
-        return list;
+    public Optional<CustomList<Card>> findAll() {
+        CustomList<Card> listOfCards = new CustomArrayList<>();
+        map.values().stream()
+                .forEach(listOfCards::add);
+        return Optional.of(listOfCards);
     }
 }

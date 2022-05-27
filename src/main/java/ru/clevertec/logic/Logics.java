@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.*;
+import java.nio.charset.Charset;
 
 public class Logics {
     private CustomList<Item> list;
@@ -44,13 +45,17 @@ public class Logics {
         }
     }
 
+    public BigDecimal getValue() {
+        return value;
+    }
+
     public void printTxt() {
         new FormatTxt(list, discount, value).setFormat();
     }
 
     public void printConsole() {
         try (BufferedReader in = new BufferedReader(new FileReader(
-                "src/main/resources/Check.txt"))) {
+                "src/main/resources/Check.txt", Charset.forName("WINDOWS-1251")))) {
             in.lines().forEach(out::println);
         } catch (IOException e) {
             e.printStackTrace();

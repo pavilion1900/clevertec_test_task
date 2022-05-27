@@ -1,5 +1,7 @@
 package ru.clevertec.task.collection;
 
+import java.util.Objects;
+
 public class CustomArrayList<E> implements CustomList<E> {
     private static final int DEFAULT_CAPACITY = 10;
     private boolean maxCapacity;
@@ -142,6 +144,87 @@ public class CustomArrayList<E> implements CustomList<E> {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof CustomList)) {
+            return false;
+        }
+
+        final int expectedModCount = modCount;
+        boolean equal = (o.getClass() == CustomArrayList.class)
+                ? equalsCustomArrayList((CustomArrayList<?>) o)
+                : equalsRange((CustomList<?>) o, 0, size);
+
+        checkForComodification(expectedModCount);
+        return equal;
+    }
+
+    boolean equalsRange(CustomList<?> other, int from, int to) {
+        final Object[] es = container;
+        if (to > es.length) {
+            throw new ConcurrentModificationException();
+        }
+        var oit = other.getIterator();
+        for (; from < to; from++) {
+            if (!oit.hasNext() || !Objects.equals(es[from], oit.next())) {
+                return false;
+            }
+        }
+        return !oit.hasNext();
+    }
+
+    private boolean equalsCustomArrayList(CustomArrayList<?> other) {
+        final int otherModCount = other.modCount;
+        final int s = size;
+        boolean equal = (s == other.size);
+        if (equal) {
+            final Object[] otherEs = other.container;
+            final Object[] es = container;
+            if (s > es.length || s > otherEs.length) {
+                throw new ConcurrentModificationException();
+            }
+            for (int i = 0; i < s; i++) {
+                if (!Objects.equals(es[i], otherEs[i])) {
+                    equal = false;
+                    break;
+                }
+            }
+        }
+        other.checkForComodification(otherModCount);
+        return equal;
+    }
+
+    private void checkForComodification(final int expectedModCount) {
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int expectedModCount = modCount;
+        int hash = hashCodeRange(0, size);
+        checkForComodification(expectedModCount);
+        return hash;
+    }
+
+    int hashCodeRange(int from, int to) {
+        final Object[] es = container;
+        if (to > es.length) {
+            throw new ConcurrentModificationException();
+        }
+        int hashCode = 1;
+        for (int i = from; i < to; i++) {
+            Object e = es[i];
+            hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());
+        }
+        return hashCode;
     }
 
     private boolean grow() {

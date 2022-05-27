@@ -5,6 +5,7 @@ import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
 import java.math.*;
+import java.nio.charset.Charset;
 
 public class FormatTxt implements Format {
     private CustomList<Item> list;
@@ -20,7 +21,7 @@ public class FormatTxt implements Format {
     @Override
     public void setFormat() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
-                "src/main/resources/Check.txt")))) {
+                "src/main/resources/Check.txt", Charset.forName("UTF-8"))))) {
             out.println(String.join(System.lineSeparator(),
                     RECEIPT, SUPERMARKET, ADDRESS, TEL, DATE, TIME, LINE, HEAD));
             for (int i = 0; i < list.size(); i++) {
