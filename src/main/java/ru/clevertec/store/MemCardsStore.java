@@ -5,7 +5,9 @@ import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class MemCardsStore implements Store<Card> {
     private Map<Integer, Card> map = new LinkedHashMap<>();

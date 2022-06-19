@@ -30,10 +30,10 @@ class FindAllItemsTest {
         FindAllItems allItems = new FindAllItems(out);
         allItems.execute(in, itemStore, cardStore);
         String expected = String.join(System.lineSeparator(),
+                "Item{id=26, description='Cherry', price=3.18, promotion=false, quantity=0}",
                 "Item{id=28, description='Apple', price=1.12, promotion=true, quantity=0}",
                 "Item{id=30, description='Watermelon', price=2.45, promotion=true, quantity=0}",
-                "Item{id=38, description='Молоко', price=2.05, promotion=true, quantity=0}",
-                "Item{id=26, description='Cherry', price=3.18, promotion=false, quantity=0}"
+                "Item{id=31, description='Bread', price=20.58, promotion=true, quantity=0}"
         );
         assertEquals(allItems.name(), "Find all items");
         assertTrue(out.toString().contains(expected));

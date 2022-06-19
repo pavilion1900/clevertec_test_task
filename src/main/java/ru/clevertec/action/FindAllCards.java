@@ -6,6 +6,7 @@ import ru.clevertec.output.Output;
 import ru.clevertec.store.Store;
 import ru.clevertec.task.collection.CustomList;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 public class FindAllCards implements UserAction {
@@ -24,10 +25,9 @@ public class FindAllCards implements UserAction {
     public boolean execute(Input input, Store itemStore, Store cardStore) {
         Optional<CustomList<Card>> optionalOfCards = cardStore.findAll();
         if (optionalOfCards.isPresent()) {
-            CustomList<Card> list = optionalOfCards.get();
-            for (int i = 0; i < list.size(); i++) {
-                out.println(list.get(i));
-            }
+            optionalOfCards.get().stream()
+                    .sorted(Comparator.comparing(Card::getNumber))
+                    .forEach(out::println);
         }
         return true;
     }

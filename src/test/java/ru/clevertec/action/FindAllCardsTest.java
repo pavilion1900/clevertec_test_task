@@ -30,10 +30,10 @@ class FindAllCardsTest {
         FindAllCards allCards = new FindAllCards(out);
         allCards.execute(in, itemStore, cardStore);
         String expected = String.join(System.lineSeparator(),
-                "Card{number=1234, discount=5}",
+                "Card{number=1, discount=9}",
                 "Card{number=1111, discount=1}",
-                "Card{number=2222, discount=20}",
-                "Card{number=1, discount=9}"
+                "Card{number=1234, discount=5}",
+                "Card{number=2222, discount=20}"
         );
         assertEquals(allCards.name(), "Find all cards");
         assertTrue(out.toString().contains(expected));

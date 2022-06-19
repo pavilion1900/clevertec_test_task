@@ -7,8 +7,9 @@ import ru.clevertec.task.collection.CustomList;
 import java.io.*;
 import java.math.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class MemItemsStore implements Store<Item> {
     private Map<Integer, Item> map = new LinkedHashMap<>();
