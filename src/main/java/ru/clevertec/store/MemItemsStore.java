@@ -6,12 +6,13 @@ import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
 import java.math.*;
-import java.util.HashMap;
+import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class MemItemsStore implements Store<Item> {
-    private Map<Integer, Item> map = new HashMap<>();
+    private Map<Integer, Item> map = new LinkedHashMap<>();
 
     @Override
     public Map<Integer, Item> getMap() {
@@ -20,7 +21,8 @@ public class MemItemsStore implements Store<Item> {
 
     @Override
     public void loadDataFromFile(String path) {
-        try (BufferedReader in = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader in = new BufferedReader(
+                new FileReader(path, Charset.forName("UTF-8")))) {
             String line;
             while ((line = in.readLine()) != null) {
                 String[] array = line.split(";");

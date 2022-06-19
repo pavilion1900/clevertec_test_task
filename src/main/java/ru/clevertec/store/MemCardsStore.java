@@ -5,12 +5,12 @@ import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class MemCardsStore implements Store<Card> {
-    private Map<Integer, Card> map = new HashMap<>();
+    private Map<Integer, Card> map = new LinkedHashMap<>();
 
     @Override
     public Map<Integer, Card> getMap() {

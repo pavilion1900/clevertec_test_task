@@ -12,7 +12,8 @@ public class FormatConsoleFixedSettings implements Format {
     private BigDecimal value;
     private final Output out;
 
-    public FormatConsoleFixedSettings(CustomList<Item> list, int discount, BigDecimal value, Output out) {
+    public FormatConsoleFixedSettings(CustomList<Item> list, int discount,
+                                      BigDecimal value, Output out) {
         this.list = list;
         this.discount = discount;
         this.value = value;

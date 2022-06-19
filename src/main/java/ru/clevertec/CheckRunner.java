@@ -16,7 +16,7 @@ public class CheckRunner {
         this.out = out;
     }
 
-    public void init(Input input, Store itemStore, Store cardStore,
+    public void init(Input input, Store<Item> itemStore, Store<Card> cardStore,
                      CustomList<UserAction> actions) {
         boolean run = true;
         while (run) {
