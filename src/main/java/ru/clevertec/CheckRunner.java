@@ -41,7 +41,15 @@ public class CheckRunner {
     public static void main(String[] args) {
         Output out = new ConsoleOutput();
         CheckRunner checkRunner = new CheckRunner(out);
-        Input input = new ValidateInput(out, new ConsoleInput());
+        Input inputOrder = new ConsoleInput();
+        String order = inputOrder.askStr("Make order ");
+        CustomList<String> steps = new CustomArrayList<>();
+        steps.add("1");
+        steps.add(order);
+        steps.add("2");
+        steps.add("3");
+        steps.add("4");
+        Input input = new StubInput(steps);
         Store<Item> itemStore = new MemItemsStore();
         Store<Card> cardStore = new MemCardsStore();
         CustomList<UserAction> actions = new CustomArrayList<>();
