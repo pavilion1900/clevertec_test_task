@@ -7,7 +7,7 @@ import ru.clevertec.model.Item;
 import ru.clevertec.output.Output;
 import ru.clevertec.parse.ParseOrder;
 import ru.clevertec.parse.ParseOrderArray;
-import ru.clevertec.service.proxy.ProductManagerHandler;
+import ru.clevertec.service.proxy.ProductServiceHandler;
 import ru.clevertec.store.Store;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
@@ -18,23 +18,22 @@ import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.Optional;
 
-public class ProductManager implements Manager {
+public class ProductService implements Service {
 
     @Override
-    public Manager getProxyManger() {
-        Manager manager = this;
-        ClassLoader classLoader = manager.getClass().getClassLoader();
-        Class<?>[] interfaces = manager.getClass().getInterfaces();
-        Manager proxyManager = (Manager) Proxy.newProxyInstance(
-                classLoader, interfaces, new ProductManagerHandler(manager));
-        return proxyManager;
+    public Service getProxyService() {
+        Service service = this;
+        ClassLoader classLoader = service.getClass().getClassLoader();
+        Class<?>[] interfaces = service.getClass().getInterfaces();
+        Service proxyService = (Service) Proxy.newProxyInstance(
+                classLoader, interfaces, new ProductServiceHandler(service));
+        return proxyService;
     }
 
     @Override
-    public CustomList<Card> findAllCards(Output out, Input in, Store itemStore, Store cardStore) {
-        System.out.println("40");
+    public CustomList<Card> findAllCards(Output out, Input in,
+                                         Store<Item> itemStore, Store<Card> cardStore) {
         CustomList<Card> cardList = new CustomArrayList<>();
-        System.out.println("50");
         Optional<CustomList<Card>> optionalOfCards = cardStore.findAll();
         if (optionalOfCards.isPresent()) {
             optionalOfCards.get().stream()
@@ -46,7 +45,8 @@ public class ProductManager implements Manager {
     }
 
     @Override
-    public CustomList<Item> findAllItems(Output out, Input in, Store itemStore, Store cardStore) {
+    public CustomList<Item> findAllItems(Output out, Input in,
+                                         Store<Item> itemStore, Store<Card> cardStore) {
         CustomList<Item> itemList = new CustomArrayList<>();
         Optional<CustomList<Item>> optionalOfItems = itemStore.findAll();
         if (optionalOfItems.isPresent()) {
@@ -59,7 +59,7 @@ public class ProductManager implements Manager {
     }
 
     @Override
-    public void makeOrder(Output out, Input in, Store itemStore, Store cardStore) {
+    public void makeOrder(Output out, Input in, Store<Item> itemStore, Store<Card> cardStore) {
         new ValidateItemWithRegEx().validate();
         new ValidateCardWithRegEx().validate();
         itemStore.loadDataFromFile("src/main/resources/rightItemData.txt");
