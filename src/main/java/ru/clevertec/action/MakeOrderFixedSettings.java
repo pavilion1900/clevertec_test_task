@@ -25,7 +25,7 @@ public class MakeOrderFixedSettings implements UserAction {
     }
 
     @Override
-    public boolean execute(Input input, Store itemStore, Store cardStore) {
+    public boolean execute(Input input, Store<Item> itemStore, Store<Card> cardStore) {
         String order = input.askStr("Enter your order ");
         String[] array = order.split(" ");
         Map<Integer, Item> mapItems = Map.ofEntries(
