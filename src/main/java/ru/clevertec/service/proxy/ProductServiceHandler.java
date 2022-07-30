@@ -9,6 +9,7 @@ import ru.clevertec.service.Service;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class ProductServiceHandler implements InvocationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ProductService.class.getName());
@@ -21,7 +22,8 @@ public class ProductServiceHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Gson gson = new GsonBuilder().create();
-        LOG.debug("Method name: {}, Input arguments: {}", method.getName(), gson.toJson(args));
+        LOG.debug("Method name: {}, Input arguments: {}", method.getName(),
+                gson.toJson(Arrays.toString(args)));
         Object result = method.invoke(service, args);
         LOG.debug("Returning value of method: {}", gson.toJson(result));
         return result;

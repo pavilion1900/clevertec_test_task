@@ -1,7 +1,7 @@
 package ru.clevertec.logic;
 
 import ru.clevertec.format.*;
-import ru.clevertec.model.Item;
+import ru.clevertec.entity.Item;
 import ru.clevertec.output.Output;
 import ru.clevertec.task.collection.CustomList;
 
@@ -60,9 +60,5 @@ public class Logics {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void printConsoleFixedSettings() {
-        new FormatConsoleFixedSettings(list, discount, value, out).setFormat();
     }
 }

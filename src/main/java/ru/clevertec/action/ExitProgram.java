@@ -1,8 +1,8 @@
 package ru.clevertec.action;
 
 import ru.clevertec.input.Input;
-import ru.clevertec.model.Card;
-import ru.clevertec.model.Item;
+import ru.clevertec.entity.Card;
+import ru.clevertec.entity.Item;
 import ru.clevertec.store.Store;
 
 public class ExitProgram implements UserAction {

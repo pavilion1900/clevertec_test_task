@@ -1,4 +1,4 @@
-package ru.clevertec.model;
+package ru.clevertec.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,6 +21,10 @@ public class Item implements Serializable {
 
     public Item(int id, String name, BigDecimal price, boolean promotion) {
         this(id, name, price, promotion, 0);
+    }
+
+    public Item(String name, BigDecimal price, boolean promotion) {
+        this(0, name, price, promotion, 0);
     }
 
     public int getId() {

@@ -1,22 +1,23 @@
 package ru.clevertec.parse;
 
-import ru.clevertec.model.*;
+import ru.clevertec.entity.*;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ParseOrderArray implements ParseOrder {
     private String[] args;
-    private Map<Integer, Item> mapItems;
-    private Map<Integer, Card> mapCards;
+    private CustomList<Item> itemList;
+    private CustomList<Card> cardList;
     private int discount;
 
     public ParseOrderArray(
-            String[] args, Map<Integer, Item> mapItems, Map<Integer, Card> mapCards) {
+            String[] args, CustomList<Item> itemList, CustomList<Card> cardList) {
         this.args = args;
-        this.mapItems = mapItems;
-        this.mapCards = mapCards;
+        this.itemList = itemList;
+        this.cardList = cardList;
     }
 
     @Override
@@ -31,6 +32,8 @@ public class ParseOrderArray implements ParseOrder {
                 throw new IllegalArgumentException("Check input data");
             }
             if (array[0].equals("card")) {
+                Map<Integer, Card> mapCards = cardList.stream()
+                        .collect(Collectors.toMap(Card::getNumber, value -> value));
                 if (mapCards.containsKey(Integer.parseInt(array[1]))) {
                     Card card = mapCards.get(Integer.parseInt(array[1]));
                     discount = card.getDiscount();
@@ -38,6 +41,8 @@ public class ParseOrderArray implements ParseOrder {
                 continue;
             }
             int itemId = Integer.parseInt(array[0]);
+            Map<Integer, Item> mapItems = itemList.stream()
+                    .collect(Collectors.toMap(Item::getId, value -> value));
             if (!mapItems.containsKey(itemId)) {
                 throw new IllegalArgumentException(
                         String.format("Product with id %d does not exist", itemId));

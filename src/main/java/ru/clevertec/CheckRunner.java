@@ -1,10 +1,13 @@
 package ru.clevertec;
 
 import ru.clevertec.action.*;
+import ru.clevertec.connection.ConnectionManager;
 import ru.clevertec.input.*;
-import ru.clevertec.model.Card;
-import ru.clevertec.model.Item;
+import ru.clevertec.entity.Card;
+import ru.clevertec.entity.Item;
 import ru.clevertec.output.*;
+import ru.clevertec.service.ProductService;
+import ru.clevertec.service.Service;
 import ru.clevertec.store.*;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
@@ -40,24 +43,26 @@ public class CheckRunner {
 
     public static void main(String[] args) {
         Output out = new ConsoleOutput();
-        CheckRunner checkRunner = new CheckRunner(out);
-        Input inputOrder = new ConsoleInput();
+        Input inputOrder = new ValidateInput(out, new ConsoleInput());
         String order = inputOrder.askStr("Make order ");
         CustomList<String> steps = new CustomArrayList<>();
-        steps.add("1");
+        steps.add("0");
         steps.add(order);
+        steps.add("1");
         steps.add("2");
         steps.add("3");
-        steps.add("4");
         Input input = new StubInput(steps);
-        Store<Item> itemStore = new MemItemsStore();
-        Store<Card> cardStore = new MemCardsStore();
-        CustomList<UserAction> actions = new CustomArrayList<>();
-        actions.add(new MakeOrderFixedSettings(out));
-        actions.add(new MakeOrder(out));
-        actions.add(new FindAllItems(out));
-        actions.add(new FindAllCards(out));
-        actions.add(new ExitProgram());
-        checkRunner.init(input, itemStore, cardStore, actions);
+        Service service = new ProductService();
+        try (SqlItemStore itemStore = new SqlItemStore(ConnectionManager.get());
+             SqlCardStore cardStore = new SqlCardStore(ConnectionManager.get())) {
+            CustomList<UserAction> actions = new CustomArrayList<>();
+            actions.add(new MakeOrder(out));
+            actions.add(new FindAllItems(out, service));
+            actions.add(new FindAllCards(out, service));
+            actions.add(new ExitProgram());
+            new CheckRunner(out).init(input, itemStore, cardStore, actions);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

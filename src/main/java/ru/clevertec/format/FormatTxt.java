@@ -1,6 +1,6 @@
 package ru.clevertec.format;
 
-import ru.clevertec.model.Item;
+import ru.clevertec.entity.Item;
 import ru.clevertec.task.collection.CustomList;
 
 import java.io.*;

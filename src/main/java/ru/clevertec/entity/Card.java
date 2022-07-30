@@ -1,14 +1,28 @@
-package ru.clevertec.model;
+package ru.clevertec.entity;
 
 import java.util.Objects;
 
 public class Card {
+    private int id;
     private int number;
     private int discount;
 
-    public Card(int number, int discount) {
+    public Card(int id, int number, int discount) {
+        this.id = id;
         this.number = number;
         this.discount = discount;
+    }
+
+    public Card(int number, int discount) {
+        this(0, number, discount);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getNumber() {
@@ -47,7 +61,8 @@ public class Card {
     @Override
     public String toString() {
         return "Card{"
-                + "number=" + number
+                + "id=" + id
+                + ", number=" + number
                 + ", discount=" + discount
                 + '}';
     }
