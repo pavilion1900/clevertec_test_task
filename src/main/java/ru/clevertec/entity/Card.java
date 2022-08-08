@@ -3,6 +3,7 @@ package ru.clevertec.entity;
 import java.util.Objects;
 
 public class Card {
+
     private int id;
     private int number;
     private int discount;

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Item implements Serializable {
+
     private int id;
     private String name;
     private BigDecimal price;

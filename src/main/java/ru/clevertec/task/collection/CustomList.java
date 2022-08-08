@@ -3,6 +3,7 @@ package ru.clevertec.task.collection;
 import java.util.stream.Stream;
 
 public interface CustomList<E> extends CustomIterable<E> {
+
     void setMaxSize(int maxSize);
 
     void add(E value);

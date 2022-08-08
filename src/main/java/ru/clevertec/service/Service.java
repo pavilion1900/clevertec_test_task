@@ -1,20 +1,16 @@
 package ru.clevertec.service;
 
-import ru.clevertec.input.Input;
-import ru.clevertec.entity.Card;
-import ru.clevertec.entity.Item;
-import ru.clevertec.output.Output;
-import ru.clevertec.store.Store;
 import ru.clevertec.task.collection.CustomList;
 
-public interface Service {
-    CustomList<Card> findAllCards(Output out, Input in,
-                                  Store<Item> itemStore, Store<Card> cardStore);
+public interface Service<T> {
 
-    CustomList<Item> findAllItems(Output out, Input in,
-                                  Store<Item> itemStore, Store<Card> cardStore);
+    T add(T value);
 
-    void makeOrder(Output out, Input in, Store<Item> itemStore, Store<Card> cardStore);
+    T update(Integer id, T value);
 
-    Service getProxyService();
+    void delete(Integer id);
+
+    CustomList<T> findAll(String pageSize, String page);
+
+    T findById(Integer id);
 }

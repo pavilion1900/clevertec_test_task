@@ -2,25 +2,19 @@ package ru.clevertec.logic;
 
 import ru.clevertec.format.*;
 import ru.clevertec.entity.Item;
-import ru.clevertec.output.Output;
 import ru.clevertec.task.collection.CustomList;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.*;
-import java.nio.charset.Charset;
 
 public class Logics {
+
     private CustomList<Item> list;
     private int discount;
     private BigDecimal value;
-    private Output out;
 
-    public Logics(CustomList<Item> list, int discount, Output out) {
+    public Logics(CustomList<Item> list, int discount) {
         this.list = list;
         this.discount = discount;
-        this.out = out;
         countValue();
     }
 
@@ -53,12 +47,7 @@ public class Logics {
         new FormatTxt(list, discount, value).setFormat();
     }
 
-    public void printConsole() {
-        try (BufferedReader in = new BufferedReader(new FileReader(
-                "src/main/resources/Check.txt", Charset.forName("WINDOWS-1251")))) {
-            in.lines().forEach(out::println);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void printPdf() {
+        new FormatPdf(list, discount, value).setFormat();
     }
 }

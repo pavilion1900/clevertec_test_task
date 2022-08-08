@@ -1,0 +1,13 @@
+              CASH RECEIPT
+            SUPERMARKET 123
+      12, MILKYWAY Galaxy / Earth
+           Tel: 123-456-7890
+CASHIER: №1520          DATE: 08/08/2022
+                        TIME: 08:06:51
+-----------------------------------------
+QTY DESCRIPTION            PRICE   TOTAL
+8   banana          sale   16.16  129.28
+5   tomato                 11.96   59.80
+4   cherry                 21.46   85.84
+=========================================
+TAXABLE TOT.                      274.92
