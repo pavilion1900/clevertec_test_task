@@ -4,6 +4,7 @@ import ru.clevertec.format.*;
 import ru.clevertec.entity.Item;
 import ru.clevertec.task.collection.CustomList;
 
+import java.io.OutputStream;
 import java.math.*;
 
 public class Logics {
@@ -11,10 +12,12 @@ public class Logics {
     private CustomList<Item> list;
     private int discount;
     private BigDecimal value;
+    private OutputStream out;
 
-    public Logics(CustomList<Item> list, int discount) {
+    public Logics(CustomList<Item> list, int discount, OutputStream out) {
         this.list = list;
         this.discount = discount;
+        this.out = out;
         countValue();
     }
 
@@ -48,6 +51,6 @@ public class Logics {
     }
 
     public void printPdf() {
-        new FormatPdf(list, discount, value).setFormat();
+        new FormatPdf(list, discount, value, out).setFormat();
     }
 }

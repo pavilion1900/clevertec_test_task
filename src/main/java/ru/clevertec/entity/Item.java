@@ -1,10 +1,9 @@
 package ru.clevertec.entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Item implements Serializable {
+public class Item {
 
     private int id;
     private String name;

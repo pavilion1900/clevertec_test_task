@@ -34,7 +34,7 @@ public class ItemRepository implements Repository<Item> {
     public Item add(Item item) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(
-                     ADD_ITEM, Statement.RETURN_GENERATED_KEYS)) {
+                     ADD_ITEM, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setBigDecimal(2, item.getPrice());
             statement.setBoolean(3, item.isPromotion());

@@ -5,16 +5,15 @@ import ru.clevertec.entity.Item;
 import ru.clevertec.logic.Logics;
 import ru.clevertec.parse.ParseOrder;
 import ru.clevertec.parse.ParseOrderHttp;
-import ru.clevertec.service.proxy.CheckServiceHandler;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
-import java.lang.reflect.Proxy;
+import java.io.OutputStream;
 import java.util.Map;
 
 public class CheckServiceImpl implements CheckService {
 
-    private static final CheckService INSTANCE = new CheckServiceImpl().getProxyCheckService();
+    private static final CheckService INSTANCE = new CheckServiceImpl();
     private static final String ID = "id";
     private static final String COUNT = "count";
     private static final String CARD = "card";
@@ -29,17 +28,7 @@ public class CheckServiceImpl implements CheckService {
     }
 
     @Override
-    public CheckService getProxyCheckService() {
-        CheckService checkService = this;
-        ClassLoader classLoader = checkService.getClass().getClassLoader();
-        Class<?>[] interfaces = checkService.getClass().getInterfaces();
-        CheckService proxyCheckService = (CheckService) Proxy.newProxyInstance(
-                classLoader, interfaces, new CheckServiceHandler(checkService));
-        return proxyCheckService;
-    }
-
-    @Override
-    public void calculateCheck(Map<String, String[]> map) {
+    public void calculateCheck(Map<String, String[]> map, OutputStream out) {
         String[] arrayId = map.get(ID);
         String[] arrayCount = map.get(COUNT);
         String[] arrayCard = map.get(CARD);
@@ -50,7 +39,7 @@ public class CheckServiceImpl implements CheckService {
         }
         Card card = cardService.findByNumber(arrayCard[0]);
         ParseOrder parseOrder = new ParseOrderHttp(itemList, arrayCount, card.getDiscount());
-        Logics logics = new Logics(parseOrder.getList(), parseOrder.getDiscount());
+        Logics logics = new Logics(parseOrder.getList(), parseOrder.getDiscount(), out);
         logics.printTxt();
         logics.printPdf();
     }

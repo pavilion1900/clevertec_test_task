@@ -1,10 +1,9 @@
 package ru.clevertec.service;
 
+import java.io.OutputStream;
 import java.util.Map;
 
 public interface CheckService {
 
-    CheckService getProxyCheckService();
-
-    void calculateCheck(Map<String, String[]> map);
+    void calculateCheck(Map<String, String[]> map, OutputStream out);
 }

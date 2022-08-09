@@ -36,7 +36,7 @@ public class CardRepository implements Repository<Card> {
     public Card add(Card card) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(
-                     ADD_CARD, Statement.RETURN_GENERATED_KEYS)) {
+                     ADD_CARD, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
             statement.execute();
