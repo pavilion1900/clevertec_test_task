@@ -1,10 +1,14 @@
 package ru.clevertec.service;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.clevertec.entity.Card;
-import ru.clevertec.exception.CardNotFoundException;
+import ru.clevertec.exception.RepositoryException;
+import ru.clevertec.exception.ServiceException;
 import ru.clevertec.repository.CardRepository;
 import ru.clevertec.task.collection.CustomList;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CardService implements Service<Card> {
 
     private static final CardService INSTANCE = new CardService();
@@ -12,16 +16,13 @@ public class CardService implements Service<Card> {
     private static final Integer PAGE_DEFAULT = 0;
     private final CardRepository cardRepository = CardRepository.getInstance();
 
-    private CardService() {
-    }
-
     public static CardService getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public Card add(Card card) {
-        return cardRepository.add(card);
+    public Card save(Card card) {
+        return cardRepository.save(card);
     }
 
     @Override
@@ -30,8 +31,8 @@ public class CardService implements Service<Card> {
             findById(id);
             card.setId(id);
             return cardRepository.update(card);
-        } catch (CardNotFoundException e) {
-            throw new CardNotFoundException(
+        } catch (RepositoryException e) {
+            throw new ServiceException(
                     String.format("Card with id %d not updated", id));
         }
     }
@@ -41,9 +42,9 @@ public class CardService implements Service<Card> {
         try {
             findById(id);
             cardRepository.delete(id);
-        } catch (CardNotFoundException e) {
-            throw new CardNotFoundException(
-                    String.format("Card with id %d not found", id));
+        } catch (RepositoryException e) {
+            throw new ServiceException(
+                    String.format("Card with id %d not deleted", id));
         }
     }
 
@@ -63,13 +64,13 @@ public class CardService implements Service<Card> {
     @Override
     public Card findById(Integer id) {
         return cardRepository.findById(id)
-                .orElseThrow(() -> new CardNotFoundException(
+                .orElseThrow(() -> new ServiceException(
                         String.format("Card with id %d not found", id)));
     }
 
     public Card findByNumber(String number) {
         return cardRepository.findByNumber(Integer.parseInt(number))
-                .orElseThrow(() -> new CardNotFoundException(
+                .orElseThrow(() -> new ServiceException(
                         String.format("Card with number %s not found", number)));
     }
 }

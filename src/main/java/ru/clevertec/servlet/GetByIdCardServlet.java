@@ -2,7 +2,7 @@ package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
 import ru.clevertec.entity.Card;
-import ru.clevertec.exception.CardNotFoundException;
+import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.CardService;
 
 import javax.servlet.ServletException;
@@ -28,7 +28,7 @@ public class GetByIdCardServlet extends HttpServlet {
                 out.write(json);
                 resp.setStatus(200);
             }
-        } catch (CardNotFoundException e) {
+        } catch (ServiceException e) {
             resp.sendError(400, "Card not found");
         }
     }

@@ -1,17 +1,17 @@
 package ru.clevertec.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.clevertec.exception.NoSuchPropertiesException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PropertiesUtil {
 
     private static final Properties PROPERTIES = new Properties();
-
-    private PropertiesUtil() {
-    }
 
     static {
         loadProperties();

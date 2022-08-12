@@ -2,10 +2,7 @@ package ru.clevertec.service;
 
 import org.junit.jupiter.api.Test;
 import ru.clevertec.entity.Card;
-import ru.clevertec.task.collection.CustomArrayList;
-import ru.clevertec.task.collection.CustomList;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 class CardServiceTest {
@@ -16,14 +13,20 @@ class CardServiceTest {
 
     @Test
     void whenAddCard() {
-        Card first = cardService.add(new Card(1234, 5));
-        assertThat(cardService.findById(first.getId())).isEqualTo(first);
+        Card card = cardService.save(Card.builder()
+                .number(1234)
+                .discount(5)
+                .build());
+        assertThat(cardService.findById(card.getId())).isEqualTo(card);
     }
 
     @Test
     void whenUpdateCard() {
-        Card card = new Card(1234, 5);
-        Card cardWithId = cardService.add(card);
+        Card card = cardService.save(Card.builder()
+                .number(1234)
+                .discount(5)
+                .build());
+        Card cardWithId = cardService.save(card);
         cardWithId.setDiscount(10);
         Card updatedCard = cardService.update(cardWithId.getId(), card);
         assertThat(cardService.findById(cardWithId.getId())).isEqualTo(updatedCard);
@@ -31,7 +34,10 @@ class CardServiceTest {
 
     @Test
     void whenDeleteCard() {
-        Card card = cardService.add(new Card(1234, 5));
+        Card card = cardService.save(Card.builder()
+                .number(1234)
+                .discount(5)
+                .build());
         cardService.delete(card.getId());
 //        assertTrue();
     }

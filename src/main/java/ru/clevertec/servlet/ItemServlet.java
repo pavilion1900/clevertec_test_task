@@ -2,7 +2,7 @@ package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
 import ru.clevertec.entity.Item;
-import ru.clevertec.exception.ItemNotFoundException;
+import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.ItemService;
 import ru.clevertec.service.Service;
 import ru.clevertec.task.collection.CustomList;
@@ -41,7 +41,11 @@ public class ItemServlet extends HttpServlet {
         String name = itemFromRequest.getName();
         BigDecimal price = itemFromRequest.getPrice();
         boolean promotion = itemFromRequest.isPromotion();
-        Item item = itemService.add(new Item(name, price, promotion));
+        Item item = itemService.save(Item.builder()
+                .name(name)
+                .price(price)
+                .promotion(promotion)
+                .build());
         String json = new Gson().toJson(item);
         try (PrintWriter out = resp.getWriter()) {
             out.write(json);
@@ -58,13 +62,17 @@ public class ItemServlet extends HttpServlet {
         BigDecimal price = itemFromRequest.getPrice();
         boolean promotion = itemFromRequest.isPromotion();
         try {
-            Item item = itemService.update(id, new Item(name, price, promotion));
+            Item item = itemService.update(id, Item.builder()
+                    .name(name)
+                    .price(price)
+                    .promotion(promotion)
+                    .build());
             String json = new Gson().toJson(item);
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);
                 resp.setStatus(200);
             }
-        } catch (ItemNotFoundException e) {
+        } catch (ServiceException e) {
             resp.sendError(400, "Item not updated");
         }
     }
@@ -80,7 +88,7 @@ public class ItemServlet extends HttpServlet {
                 out.write(json);
                 resp.setStatus(200);
             }
-        } catch (ItemNotFoundException e) {
+        } catch (ServiceException e) {
             resp.sendError(400, "Item not deleted");
         }
     }

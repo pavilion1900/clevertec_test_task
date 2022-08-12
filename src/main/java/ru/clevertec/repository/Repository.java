@@ -6,13 +6,13 @@ import java.util.Optional;
 
 public interface Repository<T> {
 
-    T add(T value);
-
-    T update(T value);
-
-    boolean delete(Integer id);
+    T save(T entity);
 
     CustomList<T> findAll(Integer pageSize, Integer page);
 
     Optional<T> findById(Integer id);
+
+    T update(T entity);
+
+    boolean delete(Integer id);
 }

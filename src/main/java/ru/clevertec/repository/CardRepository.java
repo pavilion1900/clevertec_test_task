@@ -1,18 +1,21 @@
 package ru.clevertec.repository;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import ru.clevertec.exception.RepositoryException;
 import ru.clevertec.util.ConnectionManager;
 import ru.clevertec.entity.Card;
-import ru.clevertec.exception.CardNotFoundException;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.sql.*;
 import java.util.Optional;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CardRepository implements Repository<Card> {
 
     private static final CardRepository INSTANCE = new CardRepository();
-    private static final String ADD_CARD =
+    private static final String SAVE_CARD =
             "insert into cards (number, discount) values (?, ?)";
     private static final String UPDATE_CARD =
             "update cards set number = ?, discount = ? where id = ?";
@@ -25,18 +28,15 @@ public class CardRepository implements Repository<Card> {
     private static final String FIND_BY_NUMBER =
             "select id, number, discount from cards where number = ? limit 1";
 
-    private CardRepository() {
-    }
-
     public static CardRepository getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public Card add(Card card) {
+    public Card save(Card card) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(
-                     ADD_CARD, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                     SAVE_CARD, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
             statement.execute();
@@ -46,7 +46,7 @@ public class CardRepository implements Repository<Card> {
             }
             return card;
         } catch (SQLException e) {
-            throw new CardNotFoundException("Card not added");
+            throw new RepositoryException("Card not saved");
         }
     }
 
@@ -60,7 +60,7 @@ public class CardRepository implements Repository<Card> {
             statement.execute();
             return card;
         } catch (SQLException e) {
-            throw new CardNotFoundException("Card not updated");
+            throw new RepositoryException("Card not updated");
         }
     }
 
@@ -72,7 +72,7 @@ public class CardRepository implements Repository<Card> {
                 statement.setInt(1, id);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
-                throw new CardNotFoundException(
+                throw new RepositoryException(
                         String.format("Card with id %d not deleted", id));
             }
         } else {
@@ -93,7 +93,7 @@ public class CardRepository implements Repository<Card> {
             }
             return cardList;
         } catch (SQLException e) {
-            throw new CardNotFoundException("Cards not founded");
+            throw new RepositoryException("Cards not founded");
         }
     }
 
@@ -109,7 +109,7 @@ public class CardRepository implements Repository<Card> {
             }
             return Optional.ofNullable(card);
         } catch (SQLException e) {
-            throw new CardNotFoundException(
+            throw new RepositoryException(
                     String.format("Card with id %d not found", id));
         }
     }
@@ -125,13 +125,16 @@ public class CardRepository implements Repository<Card> {
             }
             return Optional.ofNullable(card);
         } catch (SQLException e) {
-            throw new CardNotFoundException(
+            throw new RepositoryException(
                     String.format("Card with number %d not found", number));
         }
     }
 
     private Card getCard(ResultSet resultSet) throws SQLException {
-        return new Card(resultSet.getInt("id"), resultSet.getInt("number"),
-                resultSet.getInt("discount"));
+        return Card.builder().
+                id(resultSet.getInt("id"))
+                .number(resultSet.getInt("number"))
+                .discount(resultSet.getInt("discount"))
+                .build();
     }
 }

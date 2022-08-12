@@ -1,18 +1,21 @@
 package ru.clevertec.repository;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import ru.clevertec.exception.RepositoryException;
 import ru.clevertec.util.ConnectionManager;
 import ru.clevertec.entity.Item;
-import ru.clevertec.exception.ItemNotFoundException;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.sql.*;
 import java.util.Optional;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemRepository implements Repository<Item> {
 
     private static final ItemRepository INSTANCE = new ItemRepository();
-    private static final String ADD_ITEM =
+    private static final String SAVE_ITEM =
             "insert into items (name, price, promotion) values (?, ?, ?)";
     private static final String UPDATE_ITEM =
             "update items set name = ?, price = ?, promotion = ? where id = ?";
@@ -23,18 +26,15 @@ public class ItemRepository implements Repository<Item> {
     private static final String FIND_BY_ID =
             "select id, name, price, promotion from items where id = ?";
 
-    private ItemRepository() {
-    }
-
     public static ItemRepository getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public Item add(Item item) {
+    public Item save(Item item) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(
-                     ADD_ITEM, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                     SAVE_ITEM, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setBigDecimal(2, item.getPrice());
             statement.setBoolean(3, item.isPromotion());
@@ -45,7 +45,7 @@ public class ItemRepository implements Repository<Item> {
             }
             return item;
         } catch (SQLException e) {
-            throw new ItemNotFoundException("Item not added");
+            throw new RepositoryException("Item not saved");
         }
     }
 
@@ -60,7 +60,7 @@ public class ItemRepository implements Repository<Item> {
             statement.execute();
             return item;
         } catch (SQLException e) {
-            throw new ItemNotFoundException("Item not updated");
+            throw new RepositoryException("Item not updated");
         }
     }
 
@@ -72,7 +72,7 @@ public class ItemRepository implements Repository<Item> {
                 statement.setInt(1, id);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
-                throw new ItemNotFoundException(
+                throw new RepositoryException(
                         String.format("Item with id %d not deleted", id));
             }
         } else {
@@ -93,7 +93,7 @@ public class ItemRepository implements Repository<Item> {
             }
             return itemList;
         } catch (SQLException e) {
-            throw new ItemNotFoundException("Items not founded");
+            throw new RepositoryException("Items not founded");
         }
     }
 
@@ -109,13 +109,17 @@ public class ItemRepository implements Repository<Item> {
             }
             return Optional.ofNullable(item);
         } catch (SQLException e) {
-            throw new ItemNotFoundException(
+            throw new RepositoryException(
                     String.format("Item with id %d not found", id));
         }
     }
 
     private Item getItem(ResultSet resultSet) throws SQLException {
-        return new Item(resultSet.getInt("id"), resultSet.getString("name"),
-                resultSet.getBigDecimal("price"), resultSet.getBoolean("promotion"));
+        return Item.builder()
+                .id(resultSet.getInt("id"))
+                .name(resultSet.getString("name"))
+                .price(resultSet.getBigDecimal("price"))
+                .promotion(resultSet.getBoolean("promotion"))
+                .build();
     }
 }

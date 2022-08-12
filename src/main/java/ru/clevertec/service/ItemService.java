@@ -1,10 +1,14 @@
 package ru.clevertec.service;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.clevertec.entity.Item;
-import ru.clevertec.exception.ItemNotFoundException;
+import ru.clevertec.exception.RepositoryException;
+import ru.clevertec.exception.ServiceException;
 import ru.clevertec.repository.ItemRepository;
 import ru.clevertec.task.collection.CustomList;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemService implements Service<Item> {
 
     private static final ItemService INSTANCE = new ItemService();
@@ -12,16 +16,13 @@ public class ItemService implements Service<Item> {
     private static final Integer PAGE_DEFAULT = 0;
     private final ItemRepository itemRepository = ItemRepository.getInstance();
 
-    private ItemService() {
-    }
-
     public static ItemService getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public Item add(Item item) {
-        return itemRepository.add(item);
+    public Item save(Item item) {
+        return itemRepository.save(item);
     }
 
     @Override
@@ -30,8 +31,8 @@ public class ItemService implements Service<Item> {
             findById(id);
             item.setId(id);
             return itemRepository.update(item);
-        } catch (ItemNotFoundException e) {
-            throw new ItemNotFoundException(
+        } catch (RepositoryException e) {
+            throw new ServiceException(
                     String.format("Item with id %d not updated", id));
         }
     }
@@ -41,9 +42,9 @@ public class ItemService implements Service<Item> {
         try {
             findById(id);
             itemRepository.delete(id);
-        } catch (ItemNotFoundException e) {
-            throw new ItemNotFoundException(
-                    String.format("Item with id %d not found", id));
+        } catch (RepositoryException e) {
+            throw new ServiceException(
+                    String.format("Item with id %d not deleted", id));
         }
     }
 
@@ -63,7 +64,7 @@ public class ItemService implements Service<Item> {
     @Override
     public Item findById(Integer id) {
         return itemRepository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException(
+                .orElseThrow(() -> new ServiceException(
                         String.format("Item with id %d not found", id)));
     }
 }

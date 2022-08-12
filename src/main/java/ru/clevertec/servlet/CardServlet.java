@@ -2,7 +2,7 @@ package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
 import ru.clevertec.entity.Card;
-import ru.clevertec.exception.CardNotFoundException;
+import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.CardService;
 import ru.clevertec.service.Service;
 import ru.clevertec.task.collection.CustomList;
@@ -39,7 +39,10 @@ public class CardServlet extends HttpServlet {
         Card cardFromRequest = new Gson().fromJson(req.getReader(), Card.class);
         int number = cardFromRequest.getNumber();
         int discount = cardFromRequest.getDiscount();
-        Card card = cardService.add(new Card(number, discount));
+        Card card = cardService.save(Card.builder()
+                .number(number)
+                .discount(discount)
+                .build());
         String json = new Gson().toJson(card);
         try (PrintWriter out = resp.getWriter()) {
             out.write(json);
@@ -61,7 +64,7 @@ public class CardServlet extends HttpServlet {
                 out.write(json);
                 resp.setStatus(200);
             }
-        } catch (CardNotFoundException e) {
+        } catch (ServiceException e) {
             resp.sendError(400, "Card not updated");
         }
     }
@@ -77,7 +80,7 @@ public class CardServlet extends HttpServlet {
                 out.write(json);
                 resp.setStatus(200);
             }
-        } catch (CardNotFoundException e) {
+        } catch (ServiceException e) {
             resp.sendError(400, "Card not deleted");
         }
     }

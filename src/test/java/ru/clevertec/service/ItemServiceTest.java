@@ -2,13 +2,10 @@ package ru.clevertec.service;
 
 import org.junit.jupiter.api.Test;
 import ru.clevertec.entity.Item;
-import ru.clevertec.task.collection.CustomArrayList;
-import ru.clevertec.task.collection.CustomList;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ItemServiceTest {
@@ -19,16 +16,22 @@ class ItemServiceTest {
 
     @Test
     void whenAddItem() {
-        Item milk = itemService.add(new Item("milk",
-                new BigDecimal(10.12).setScale(2, RoundingMode.HALF_UP), false));
-        assertThat(itemService.findById(milk.getId())).isEqualTo(milk);
+        Item item = itemService.save(Item.builder()
+                .name("milk")
+                .price(new BigDecimal(10.12).setScale(2, RoundingMode.HALF_UP))
+                .promotion(false)
+                .build());
+        assertThat(itemService.findById(item.getId())).isEqualTo(item);
     }
 
     @Test
     void whenUpdateItem() {
-        Item item = new Item("milk",
-                new BigDecimal(10.12).setScale(2, RoundingMode.HALF_UP), false);
-        Item itemWithId = itemService.add(item);
+        Item item = itemService.save(Item.builder()
+                .name("milk")
+                .price(new BigDecimal(10.12).setScale(2, RoundingMode.HALF_UP))
+                .promotion(false)
+                .build());
+        Item itemWithId = itemService.save(item);
         itemWithId.setName("newMilk");
         Item updatedItem = itemService.update(itemWithId.getId(), item);
         assertThat(itemService.findById(item.getId())).isEqualTo(updatedItem);
@@ -36,9 +39,12 @@ class ItemServiceTest {
 
     @Test
     void whenDeleteItem() {
-        Item milk = itemService.add(new Item("milk",
-                new BigDecimal(10.12).setScale(2, RoundingMode.HALF_UP), false));
-        itemService.delete(milk.getId());
+        Item item = itemService.save(Item.builder()
+                .name("milk")
+                .price(new BigDecimal(10.12).setScale(2, RoundingMode.HALF_UP))
+                .promotion(false)
+                .build());
+        itemService.delete(item.getId());
 //        assertNull(itemService.findById(milk.getId()));
     }
 

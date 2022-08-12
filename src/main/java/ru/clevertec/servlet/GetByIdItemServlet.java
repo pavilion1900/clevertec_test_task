@@ -2,7 +2,7 @@ package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
 import ru.clevertec.entity.Item;
-import ru.clevertec.exception.ItemNotFoundException;
+import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.ItemService;
 import ru.clevertec.service.Service;
 
@@ -29,7 +29,7 @@ public class GetByIdItemServlet extends HttpServlet {
                 out.write(json);
                 resp.setStatus(200);
             }
-        } catch (ItemNotFoundException e) {
+        } catch (ServiceException e) {
             resp.sendError(400, "Item not found");
         }
     }

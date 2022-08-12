@@ -1,5 +1,7 @@
 package ru.clevertec.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.clevertec.exception.NoSuchConnectionException;
 
 import java.lang.reflect.Proxy;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionManager {
 
     private static final String DRIVER_KEY = "jdbc.driver";
@@ -21,9 +24,6 @@ public final class ConnectionManager {
     private static final int DEFAULT_POOL_SIZE = 10;
     private static BlockingQueue<Connection> pool;
     private static List<Connection> sourceConnections;
-
-    private ConnectionManager() {
-    }
 
     static {
         loadDriver();
