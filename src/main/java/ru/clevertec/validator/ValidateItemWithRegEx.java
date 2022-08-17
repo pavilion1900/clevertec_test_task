@@ -4,23 +4,26 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 public class ValidateItemWithRegEx implements Validate {
+
+    private static final String INPUT_ITEM = "src/main/resources/inputItemData.txt";
+    private static final String INVALID_ITEM = "src/main/resources/invalidItemData.txt";
+    private static final String RIGHT_ITEM = "src/main/resources/rightItemData.txt";
+    private static final String ENCODING = "UTF-8";
+    private static final String REGEX = "^(100|[1-9]\\d|0[1-9]|[1-9]);(([A-Z][a-z]{2,29})|"
+            + "([А-ЯЁ][а-яё]{2,29}));((100\\.00)|([1-9]\\d|0[1-9]|[1-9])\\.\\d{2});"
+            + "(true|false)\\b";
+
     @Override
     public void validate() {
         try (BufferedReader in = new BufferedReader(
-                new FileReader("src/main/resources/inputItemData.txt",
-                        Charset.forName("UTF-8")));
+                new FileReader(INPUT_ITEM, Charset.forName(ENCODING)));
              PrintWriter outInvalidData = new PrintWriter(
-                     new FileWriter("src/main/resources/invalidItemData.txt",
-                             Charset.forName("UTF-8")));
+                     new FileWriter(INVALID_ITEM, Charset.forName(ENCODING)));
              PrintWriter outRightData = new PrintWriter(
-                     new FileWriter("src/main/resources/rightItemData.txt",
-                             Charset.forName("UTF-8")))) {
+                     new FileWriter(RIGHT_ITEM, Charset.forName(ENCODING)))) {
             String line;
             while ((line = in.readLine()) != null) {
-                String itemRegex = "^(100|[1-9]\\d|0[1-9]|[1-9]);(([A-Z][a-z]{2,29})|"
-                        + "([А-ЯЁ][а-яё]{2,29}));((100\\.00)|([1-9]\\d|0[1-9]|[1-9])\\.\\d{2});"
-                        + "(true|false)\\b";
-                if (!line.matches(itemRegex)) {
+                if (!line.matches(REGEX)) {
                     outInvalidData.println(line);
                 } else {
                     outRightData.println(line);

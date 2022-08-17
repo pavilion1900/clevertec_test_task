@@ -1,6 +1,7 @@
 package ru.clevertec.task.collection;
 
 public class ConcurrentModificationException extends RuntimeException {
+
     public ConcurrentModificationException() {
     }
 

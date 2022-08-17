@@ -1,4 +1,0 @@
-28;Apple;1.12;false
-30;Watermelon;2.45;true
-38;Молоко;2.05;true
-26;Cherry;3.18;false

@@ -1,6 +1,7 @@
 package ru.clevertec.task.collection;
 
 public interface CustomIterator<E> {
+
     boolean hasNext();
 
     E next();

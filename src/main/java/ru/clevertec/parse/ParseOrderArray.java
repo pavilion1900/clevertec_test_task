@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ParseOrderArray implements ParseOrder {
+
     private String[] args;
     private CustomList<Item> itemList;
     private CustomList<Card> cardList;
