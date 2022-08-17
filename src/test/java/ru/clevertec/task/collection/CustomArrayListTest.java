@@ -3,6 +3,7 @@ package ru.clevertec.task.collection;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class CustomArrayListTest {
 
@@ -23,21 +24,25 @@ public class CustomArrayListTest {
 
     @Test
     public void checkIteratorNext() {
-        assertEquals(Integer.valueOf(22), list.getIterator().next());
-        assertEquals(Integer.valueOf(22), list.getIterator().next());
+        assertAll(
+                () -> assertThat(list.getIterator().next()).isEqualTo(Integer.valueOf(22)),
+                () -> assertThat(list.getIterator().next()).isEqualTo(Integer.valueOf(22))
+        );
     }
 
     @Test
     public void checkIteratorNextAndHasNext() {
         CustomIterator<Integer> iterator = list.getIterator();
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(22), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(33), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(44), iterator.next());
-        assertFalse(iterator.hasNext());
-        assertFalse(iterator.hasNext());
+        assertAll(
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(22)),
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(33)),
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(44)),
+                () -> assertFalse(iterator.hasNext()),
+                () -> assertFalse(iterator.hasNext())
+        );
     }
 
     @Test
@@ -49,14 +54,15 @@ public class CustomArrayListTest {
     @Test
     public void checkIteratorRemove() {
         CustomIterator<Integer> iterator = list.getIterator();
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(22), iterator.next());
+        iterator.next();
         iterator.remove();
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(33), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(44), iterator.next());
-        assertFalse(iterator.hasNext());
+        assertAll(
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(33)),
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(44)),
+                () -> assertFalse(iterator.hasNext())
+        );
     }
 
     @Test
@@ -66,21 +72,17 @@ public class CustomArrayListTest {
     }
 
     @Test
-    public void checkIteratorAddBeforeAndAddAfter() {
+    public void checkIteratorAddBefore() {
         list.add(55);
         CustomIterator<Integer> iterator = list.getIterator();
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(22), iterator.next());
+        iterator.next();
         iterator.addBefore(100);
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(100), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(33), iterator.next());
-        iterator.addAfter(200);
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(44), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(200), iterator.next());
+        assertAll(
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(100)),
+                () -> assertTrue(iterator.hasNext()),
+                () -> assertThat(iterator.next()).isEqualTo(Integer.valueOf(33))
+        );
     }
 
     @Test
@@ -104,7 +106,7 @@ public class CustomArrayListTest {
         list.add(20);
         list.add(30);
         list.add(40);
-        assertEquals(3, list.size());
+        assertThat(list.size()).isEqualTo(3);
     }
 
     @Test
@@ -115,7 +117,7 @@ public class CustomArrayListTest {
         list.add(30);
         list.add(40);
         list.setMaxSize(3);
-        assertEquals(3, list.size());
+        assertThat(list.size()).isEqualTo(3);
     }
 
     @Test
@@ -123,9 +125,11 @@ public class CustomArrayListTest {
         list = new CustomArrayList<>();
         list.add(null);
         list.add(10);
-        assertEquals(2, list.size());
-        assertNull(list.get(0));
-        assertEquals(Integer.valueOf(10), list.get(1));
+        assertAll(
+                () -> assertThat(list.size()).isEqualTo(2),
+                () -> assertNull(list.get(0)),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(10))
+        );
     }
 
     @Test
@@ -139,7 +143,7 @@ public class CustomArrayListTest {
         list.add(105);
         list.add(112);
         list.add(122);
-        assertEquals(12, list.size());
+        assertThat(list.size()).isEqualTo(12);
     }
 
     @Test
@@ -148,8 +152,10 @@ public class CustomArrayListTest {
         list.add(null);
         list.add(10);
         list.add(1, 100);
-        assertEquals(3, list.size());
-        assertEquals(Integer.valueOf(100), list.get(1));
+        assertAll(
+                () -> assertThat(list.size()).isEqualTo(3),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(100))
+        );
     }
 
     @Test
@@ -158,25 +164,31 @@ public class CustomArrayListTest {
         customList.add(70);
         customList.add(80);
         list.addAll(customList);
-        assertEquals(5, list.size());
-        assertEquals(Integer.valueOf(33), list.get(1));
-        assertEquals(Integer.valueOf(80), list.get(4));
+        assertAll(
+                () -> assertThat(list.size()).isEqualTo(5),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(33)),
+                () -> assertThat(list.get(4)).isEqualTo(Integer.valueOf(80))
+        );
     }
 
     @Test
     public void checkAddAllArray() {
         Integer[] array = {70, 80};
         list.addAll(array);
-        assertEquals(5, list.size());
-        assertEquals(Integer.valueOf(33), list.get(1));
-        assertEquals(Integer.valueOf(80), list.get(4));
+        assertAll(
+                () -> assertThat(list.size()).isEqualTo(5),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(33)),
+                () -> assertThat(list.get(4)).isEqualTo(Integer.valueOf(80))
+        );
     }
 
     @Test
     public void checkSet() {
-        assertEquals(Integer.valueOf(33), list.set(1, 55));
-        assertEquals(Integer.valueOf(55), list.get(1));
-        assertEquals(3, list.size());
+        assertAll(
+                () -> assertThat(list.set(1, 55)).isEqualTo(Integer.valueOf(33)),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(55)),
+                () -> assertThat(list.size()).isEqualTo(3)
+        );
     }
 
     @Test
@@ -186,9 +198,12 @@ public class CustomArrayListTest {
 
     @Test
     public void checkRemoveAndSize() {
-        assertEquals(3, list.size());
-        assertEquals(Integer.valueOf(33), list.remove(1));
-        assertEquals(2, list.size());
+        assertAll(
+                () -> assertThat(list.size()).isEqualTo(3),
+                () -> assertThat(list.remove(1)).isEqualTo(Integer.valueOf(33)),
+                () -> assertThat(list.size()).isEqualTo(2)
+        );
+
     }
 
     @Test
@@ -199,22 +214,27 @@ public class CustomArrayListTest {
     @Test
     public void checkRemoveAndGet() {
         list.remove(1);
-        assertEquals(Integer.valueOf(22), list.get(0));
-        assertEquals(Integer.valueOf(44), list.get(1));
+        assertAll(
+                () -> assertThat(list.get(0)).isEqualTo(Integer.valueOf(22)),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(44))
+        );
+
     }
 
     @Test
     public void checkClear() {
         list.clear();
-        assertEquals(0, list.size());
+        assertThat(list.size()).isEqualTo(0);
     }
 
     @Test
     public void checkFind() {
         list.add(88);
         list.add(44);
-        assertEquals(2, list.find(44));
-        assertEquals(-1, list.find(4444));
+        assertAll(
+                () -> assertThat(list.find(44)).isEqualTo(2),
+                () -> assertThat(list.find(4444)).isEqualTo(-1)
+        );
     }
 
     @Test
@@ -223,14 +243,16 @@ public class CustomArrayListTest {
         list.add(60);
         list.add(null);
         list.add(70);
-        assertEquals(3, list.find(null));
-        assertEquals(7, list.size());
-        assertEquals(-1, list.find(4444));
+        assertAll(
+                () -> assertThat(list.find(null)).isEqualTo(3),
+                () -> assertThat(list.size()).isEqualTo(7),
+                () -> assertThat(list.find(4444)).isEqualTo(-1)
+        );
     }
 
     @Test
     public void checkGetByCorrectIndex() {
-        assertEquals(Integer.valueOf(22), list.get(0));
+        assertThat(list.get(0)).isEqualTo(Integer.valueOf(22));
     }
 
     @Test
@@ -241,14 +263,16 @@ public class CustomArrayListTest {
     @Test
     public void checkToArray() {
         Integer[] array = list.toArray(new Integer[list.size()]);
-        assertEquals(3, array.length);
-        assertEquals(Integer.valueOf(22), array[0]);
-        assertEquals(Integer.valueOf(33), array[1]);
+        assertAll(
+                () -> assertThat(array.length).isEqualTo(3),
+                () -> assertThat(array[0]).isEqualTo(Integer.valueOf(22)),
+                () -> assertThat(array[1]).isEqualTo(Integer.valueOf(33))
+        );
     }
 
     @Test
     public void checkSize() {
-        assertEquals(3, list.size());
+        assertThat(list.size()).isEqualTo(3);
     }
 
     @Test
@@ -257,9 +281,11 @@ public class CustomArrayListTest {
         list.add(null);
         list.add(null);
         list.trim();
-        assertEquals(3, list.size());
-        assertEquals(Integer.valueOf(22), list.get(0));
-        assertEquals(Integer.valueOf(33), list.get(1));
-        assertEquals(Integer.valueOf(44), list.get(2));
+        assertAll(
+                () -> assertThat(list.size()).isEqualTo(3),
+                () -> assertThat(list.get(0)).isEqualTo(Integer.valueOf(22)),
+                () -> assertThat(list.get(1)).isEqualTo(Integer.valueOf(33)),
+                () -> assertThat(list.get(2)).isEqualTo(Integer.valueOf(44))
+        );
     }
 }

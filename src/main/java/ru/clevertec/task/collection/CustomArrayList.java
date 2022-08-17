@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class CustomArrayList<E> implements CustomList<E> {
+
     private static final int DEFAULT_CAPACITY = 10;
     private boolean maxCapacity;
     private E[] container;
