@@ -1,7 +1,5 @@
 package ru.clevertec.repository;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import ru.clevertec.exception.RepositoryException;
 import ru.clevertec.util.ConnectionManager;
 import ru.clevertec.entity.Item;
@@ -11,30 +9,25 @@ import ru.clevertec.task.collection.CustomList;
 import java.sql.*;
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@org.springframework.stereotype.Repository
 public class ItemRepository implements Repository<Item> {
 
-    private static final ItemRepository INSTANCE = new ItemRepository();
-    private static final String SAVE_ITEM =
+    private static final String SAVE =
             "insert into items (name, price, promotion) values (?, ?, ?)";
-    private static final String UPDATE_ITEM =
+    private static final String UPDATE =
             "update items set name = ?, price = ?, promotion = ? where id = ?";
-    private static final String DELETE_ITEM =
+    private static final String DELETE =
             "delete from items where id = ?";
-    private static final String FIND_ALL_ITEMS =
+    private static final String FIND_ALL =
             "select id, name, price, promotion from items limit ? offset ?";
     private static final String FIND_BY_ID =
             "select id, name, price, promotion from items where id = ?";
-
-    public static ItemRepository getInstance() {
-        return INSTANCE;
-    }
 
     @Override
     public Item save(Item item) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(
-                     SAVE_ITEM, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                     SAVE, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setBigDecimal(2, item.getPrice());
             statement.setBoolean(3, item.isPromotion());
@@ -52,7 +45,7 @@ public class ItemRepository implements Repository<Item> {
     @Override
     public Item update(Item item) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_ITEM)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE)) {
             statement.setString(1, item.getName());
             statement.setBigDecimal(2, item.getPrice());
             statement.setBoolean(3, item.isPromotion());
@@ -68,7 +61,7 @@ public class ItemRepository implements Repository<Item> {
     public boolean delete(Integer id) {
         if (findById(id).isPresent()) {
             try (Connection connection = ConnectionManager.get();
-                 PreparedStatement statement = connection.prepareStatement(DELETE_ITEM)) {
+                 PreparedStatement statement = connection.prepareStatement(DELETE)) {
                 statement.setInt(1, id);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -83,7 +76,7 @@ public class ItemRepository implements Repository<Item> {
     @Override
     public CustomList<Item> findAll(Integer pageSize, Integer page) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_ITEMS)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL)) {
             statement.setInt(1, pageSize);
             statement.setInt(2, page);
             ResultSet resultSet = statement.executeQuery();

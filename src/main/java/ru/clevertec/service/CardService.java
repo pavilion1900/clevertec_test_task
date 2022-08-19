@@ -1,36 +1,67 @@
 package ru.clevertec.service;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import ru.clevertec.dto.CardDto;
 import ru.clevertec.entity.Card;
 import ru.clevertec.exception.RepositoryException;
 import ru.clevertec.exception.ServiceException;
+import ru.clevertec.mapper.CardMapper;
 import ru.clevertec.repository.CardRepository;
+import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CardService implements Service<Card> {
+@org.springframework.stereotype.Service
+@RequiredArgsConstructor
+public class CardService implements Service<CardDto, Card> {
 
-    private static final CardService INSTANCE = new CardService();
     private static final Integer PAGE_SIZE_DEFAULT = 20;
     private static final Integer PAGE_DEFAULT = 0;
-    private final CardRepository cardRepository = CardRepository.getInstance();
+    private final CardRepository repository;
+    private final CardMapper mapper;
 
-    public static CardService getInstance() {
-        return INSTANCE;
+    @Override
+    public CardDto save(Card card) {
+        return mapper.map(repository.save(card));
     }
 
     @Override
-    public Card save(Card card) {
-        return cardRepository.save(card);
+    public CustomList<CardDto> findAll(String pageSizeStr, String pageStr) {
+        Integer pageSize = PAGE_SIZE_DEFAULT;
+        Integer page = PAGE_DEFAULT * pageSize;
+        if (pageSizeStr != null) {
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+        if (pageStr != null) {
+            page = Integer.parseInt(pageStr) * pageSize;
+        }
+        CustomList<CardDto> cardDtoList = new CustomArrayList<>();
+        repository.findAll(pageSize, page).stream()
+                .map(mapper::map)
+                .forEach(cardDtoList::add);
+        return cardDtoList;
     }
 
     @Override
-    public Card update(Integer id, Card card) {
+    public CardDto findById(Integer id) {
+        return repository.findById(id)
+                .map(mapper::map)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Card with id %d not found", id)));
+    }
+
+    public CardDto findByNumber(String number) {
+        return repository.findByNumber(Integer.parseInt(number))
+                .map(mapper::map)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Card with number %s not found", number)));
+    }
+
+    @Override
+    public CardDto update(Integer id, Card card) {
         try {
             findById(id);
             card.setId(id);
-            return cardRepository.update(card);
+            return mapper.map(repository.update(card));
         } catch (RepositoryException e) {
             throw new ServiceException(
                     String.format("Card with id %d not updated", id));
@@ -41,36 +72,10 @@ public class CardService implements Service<Card> {
     public void delete(Integer id) {
         try {
             findById(id);
-            cardRepository.delete(id);
+            repository.delete(id);
         } catch (RepositoryException e) {
             throw new ServiceException(
                     String.format("Card with id %d not deleted", id));
         }
-    }
-
-    @Override
-    public CustomList<Card> findAll(String pageSizeStr, String pageStr) {
-        Integer pageSize = PAGE_SIZE_DEFAULT;
-        Integer page = PAGE_DEFAULT * pageSize;
-        if (pageSizeStr != null) {
-            pageSize = Integer.parseInt(pageSizeStr);
-        }
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr) * pageSize;
-        }
-        return cardRepository.findAll(pageSize, page);
-    }
-
-    @Override
-    public Card findById(Integer id) {
-        return cardRepository.findById(id)
-                .orElseThrow(() -> new ServiceException(
-                        String.format("Card with id %d not found", id)));
-    }
-
-    public Card findByNumber(String number) {
-        return cardRepository.findByNumber(Integer.parseInt(number))
-                .orElseThrow(() -> new ServiceException(
-                        String.format("Card with number %s not found", number)));
     }
 }

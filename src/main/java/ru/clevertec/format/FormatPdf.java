@@ -10,6 +10,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import ru.clevertec.entity.Item;
+import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 import ru.clevertec.util.PropertiesUtil;
 
@@ -19,14 +20,20 @@ import java.math.RoundingMode;
 
 public class FormatPdf implements Format {
 
-    private static final float TABLE_WIDTH = 300F;
-    private CustomList<Item> list;
-    private int discount;
-    private BigDecimal value;
-    private OutputStream out;
+    private static final float TABLE_WIDTH =
+            Float.parseFloat(PropertiesUtil.get("check.table.width"));
+    private static final String CHECK_SUPERMARKET_KEY = "check.supermarket";
+    private static final String CHECK_ADDRESS_KEY = "check.address";
+    private static final String CHECK_PHONE_KEY = "check.phone";
+    private static final String CHECK_QUANTITY_DISCOUNT_KEY = "check.quantity.discount";
+    private static final String CHECK_SALE_KEY = "check.sale";
+    private final CustomList<Item> list;
+    private final int discount;
+    private final BigDecimal value;
+    private final OutputStream out;
 
     public FormatPdf(CustomList<Item> list, int discount, BigDecimal value, OutputStream out) {
-        this.list = list;
+        this.list = new CustomArrayList<>(list);
         this.discount = discount;
         this.value = value;
         this.out = out;
@@ -40,13 +47,13 @@ public class FormatPdf implements Format {
         Document document = new Document(pdfDocument);
         float[] columnWidth = {TABLE_WIDTH};
         Table table = new Table(columnWidth);
-        table.addCell(setTextCenter(RECEIPT2));
-        table.addCell(setTextCenter(PropertiesUtil.get("check.supermarket")));
-        table.addCell(setTextCenter(PropertiesUtil.get("check.address")));
-        table.addCell(setTextCenter(PropertiesUtil.get("check.phone")));
+        table.addCell(setTextCenter(RECEIPT));
+        table.addCell(setTextCenter(PropertiesUtil.get(CHECK_SUPERMARKET_KEY)));
+        table.addCell(setTextCenter(PropertiesUtil.get(CHECK_ADDRESS_KEY)));
+        table.addCell(setTextCenter(PropertiesUtil.get(CHECK_PHONE_KEY)));
         float[] columnWidth2 = {TABLE_WIDTH / 2, TABLE_WIDTH / 2};
         Table table2 = new Table(columnWidth2);
-        table2.addCell(setTextLeft(CASHIER2));
+        table2.addCell(setTextLeft(CASHIER));
         table2.addCell(setTextLeft(DATE2));
         table2.addCell(setTextLeft(EMPTY));
         table2.addCell(setTextLeft(TIME2));
@@ -60,10 +67,10 @@ public class FormatPdf implements Format {
         table3.addCell(setTextRight(TOTAL));
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isPromotion() && list.get(i).getQuantity()
-                    > Integer.parseInt(PropertiesUtil.get("check.quantity.discount"))) {
+                    > Integer.parseInt(PropertiesUtil.get(CHECK_QUANTITY_DISCOUNT_KEY))) {
                 table3.addCell(setTextLeft(String.valueOf(list.get(i).getQuantity())));
                 table3.addCell(setTextLeft(list.get(i).getName()));
-                table3.addCell(setTextLeft(SALE));
+                table3.addCell(setTextLeft(PropertiesUtil.get(CHECK_SALE_KEY)));
                 table3.addCell(setTextRight(String.valueOf(list.get(i).getPrice()
                         .multiply(DISCOUNT_VALUE)
                         .setScale(2, RoundingMode.HALF_UP))));
@@ -94,9 +101,9 @@ public class FormatPdf implements Format {
         table4.addCell(setTextRight(String.valueOf(value)));
         document.add(table);
         document.add(table2);
-        document.add(new Paragraph("-".repeat(73)));
+        document.add(new Paragraph(DELIMITER.repeat(42)));
         document.add(table3);
-        document.add(new Paragraph("=".repeat(42)));
+        document.add(new Paragraph(DELIMITER.repeat(42)));
         document.add(table4);
         document.close();
     }

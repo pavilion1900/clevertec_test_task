@@ -78,8 +78,8 @@ public final class ConnectionManager {
 
     public static void closePool() {
         try {
-            for (int i = 0; i < sourceConnections.size(); i++) {
-                sourceConnections.get(i).close();
+            for (Connection connection : sourceConnections) {
+                connection.close();
             }
         } catch (SQLException e) {
             throw new NoSuchConnectionException("Connection pool not closed");

@@ -1,4 +1,4 @@
-package ru.clevertec.entity;
+package ru.clevertec.dto;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Item {
+public class ItemDto {
 
     private int id;
     private String name;

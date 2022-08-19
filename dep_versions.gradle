@@ -1,0 +1,21 @@
+ext.versions = [
+        'junit'           : '5.9.0',
+        'assertj_core'    : '3.23.1',
+        'jmh'             : '1.33',
+        'aspectjweaver'   : '1.9.9.1',
+        'log4j'           : '1.2.17',
+        'slf4j'           : '1.7.30',
+        'gson'            : '2.9.0',
+        'lombok'          : '1.18.24',
+        'postgresql'      : '42.4.2',
+        'h2'              : '2.1.214',
+        'javaee_api'      : '8.0.1',
+        'servlet_api'     : '2.5',
+        'itext7'          : '7.0.4',
+        'liquibase_core'  : '4.15.0',
+        'liquibase_groovy': '3.0.2',
+        'picocli'         : '4.6.3',
+        'snakeyaml'       : '1.30',
+        'jaxb_api'        : '2.4.0-b180830.0359',
+        'spring'          : '5.3.22'
+]

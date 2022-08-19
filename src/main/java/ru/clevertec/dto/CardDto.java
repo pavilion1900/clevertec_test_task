@@ -1,4 +1,4 @@
-package ru.clevertec.entity;
+package ru.clevertec.dto;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Card {
+public class CardDto {
 
     private int id;
     private int number;

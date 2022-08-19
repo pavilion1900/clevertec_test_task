@@ -5,9 +5,9 @@ import java.nio.charset.Charset;
 
 public class ValidateItemWithRegEx implements Validate {
 
-    private static final String INPUT_ITEM = "src/main/resources/inputItemData.txt";
-    private static final String INVALID_ITEM = "src/main/resources/invalidItemData.txt";
-    private static final String RIGHT_ITEM = "src/main/resources/rightItemData.txt";
+    private static final String INPUT_ITEM = "src/main/resources/txt/inputItemData.txt";
+    private static final String INVALID_ITEM = "src/main/resources/txt/invalidItemData.txt";
+    private static final String RIGHT_ITEM = "src/main/resources/txt/rightItemData.txt";
     private static final String ENCODING = "UTF-8";
     private static final String REGEX = "^(100|[1-9]\\d|0[1-9]|[1-9]);(([A-Z][a-z]{2,29})|"
             + "([А-ЯЁ][а-яё]{2,29}));((100\\.00)|([1-9]\\d|0[1-9]|[1-9])\\.\\d{2});"

@@ -2,15 +2,15 @@ package ru.clevertec.service;
 
 import ru.clevertec.task.collection.CustomList;
 
-public interface Service<T> {
+public interface Service<D, E> {
 
-    T save(T value);
+    D save(E entity);
 
-    CustomList<T> findAll(String pageSize, String page);
+    CustomList<D> findAll(String pageSizeStr, String pageStr);
 
-    T findById(Integer id);
+    D findById(Integer id);
 
-    T update(Integer id, T value);
+    D update(Integer id, E entity);
 
     void delete(Integer id);
 }

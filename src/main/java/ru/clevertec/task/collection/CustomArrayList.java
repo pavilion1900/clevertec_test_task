@@ -1,5 +1,6 @@
 package ru.clevertec.task.collection;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -17,6 +18,18 @@ public class CustomArrayList<E> implements CustomList<E> {
 
     public CustomArrayList(int capacity) {
         this.container = (E[]) new Object[capacity];
+    }
+
+    public CustomArrayList(CustomList<? extends E> list) {
+        E[] array = list.toArray();
+        size = array.length;
+        if (size != 0) {
+            if (list.getClass() == CustomArrayList.class) {
+                container = array;
+            }
+        } else {
+            container = (E[]) new Object[DEFAULT_CAPACITY];
+        }
     }
 
     @Override
@@ -126,6 +139,10 @@ public class CustomArrayList<E> implements CustomList<E> {
     public <T> T[] toArray(T[] array) {
         System.arraycopy(container, 0, array, 0, size);
         return array;
+    }
+
+    public E[] toArray() {
+        return Arrays.copyOf(container, size);
     }
 
     @Override
