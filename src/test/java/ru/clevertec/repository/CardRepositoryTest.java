@@ -8,8 +8,6 @@ import static org.assertj.core.api.Assertions.*;
 
 public class CardRepositoryTest {
 
-//    private static final Integer PAGE_SIZE_DEFAULT = 20;
-//    private static final Integer PAGE_DEFAULT = 0;
 //    private static CardRepository cardRepository = CardRepository.getInstance();
 //
 //    @Test

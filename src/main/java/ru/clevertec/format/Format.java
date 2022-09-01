@@ -21,7 +21,7 @@ public interface Format {
     String TIME2 = "TIME: " + DATE_TIME.format(FORMATTER_TIME);
     String DELIMITER = "=";
     int ONE_HUNDRED = 100;
-    BigDecimal DISCOUNT_VALUE = new BigDecimal(PropertiesUtil.get("check.discount"));
+    BigDecimal DISCOUNT_VALUE = PropertiesUtil.getYamlProperties().getCheck().getDiscount();
     String QTY = "QTY";
     String DESCRIPTION = "DESCRIPTION";
     String PRICE = "PRICE";

@@ -12,8 +12,6 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ItemRepositoryTest {
 
-//    private static final Integer PAGE_SIZE_DEFAULT = 20;
-//    private static final Integer PAGE_DEFAULT = 0;
 //    private static ItemRepository itemRepository = ItemRepository.getInstance();
 //
 //    @Test

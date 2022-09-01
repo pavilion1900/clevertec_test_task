@@ -16,11 +16,6 @@ import java.util.concurrent.BlockingQueue;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionManager {
 
-    private static final String DRIVER_KEY = "jdbc.driver";
-    private static final String URL_KEY = "jdbc.url";
-    private static final String USERNAME_KEY = "jdbc.username";
-    private static final String PASSWORD_KEY = "jdbc.password";
-    private static final String POOL_SIZE_KEY = "jdbc.pool.size";
     private static final int DEFAULT_POOL_SIZE = 10;
     private static BlockingQueue<Connection> pool;
     private static List<Connection> sourceConnections;
@@ -31,7 +26,7 @@ public final class ConnectionManager {
     }
 
     private static void initConnectionPool() {
-        String poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
+        String poolSize = PropertiesUtil.getYamlProperties().getJdbc().getPoolSize();
         int size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
         pool = new ArrayBlockingQueue<>(size);
         sourceConnections = new ArrayList<>(size);
@@ -59,9 +54,9 @@ public final class ConnectionManager {
     private static Connection open() {
         try {
             return DriverManager.getConnection(
-                    PropertiesUtil.get(URL_KEY),
-                    PropertiesUtil.get(USERNAME_KEY),
-                    PropertiesUtil.get(PASSWORD_KEY)
+                    PropertiesUtil.getYamlProperties().getJdbc().getUrl(),
+                    PropertiesUtil.getYamlProperties().getJdbc().getUsername(),
+                    PropertiesUtil.getYamlProperties().getJdbc().getPassword()
             );
         } catch (SQLException e) {
             throw new NoSuchConnectionException("Connection not found");
@@ -70,7 +65,7 @@ public final class ConnectionManager {
 
     private static void loadDriver() {
         try {
-            Class.forName(PropertiesUtil.get(DRIVER_KEY));
+            Class.forName(PropertiesUtil.getYamlProperties().getJdbc().getDriver());
         } catch (ClassNotFoundException e) {
             throw new NoSuchConnectionException("Connection driver not found");
         }

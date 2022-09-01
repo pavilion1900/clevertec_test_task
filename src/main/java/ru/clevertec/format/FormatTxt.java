@@ -18,12 +18,6 @@ public class FormatTxt implements Format {
     //    private static final String PATH = "src/main/resources/check.txt";
     private static final String PATH =
             "C:\\projects\\clevertec_test_task\\src\\main\\resources\\txt\\check.txt";
-    private static final String CHECK_SUPERMARKET_KEY = "check.supermarket";
-    private static final String CHECK_ADDRESS_KEY = "check.address";
-    private static final String CHECK_PHONE_KEY = "check.phone";
-    private static final String CHECK_QUANTITY_DISCOUNT_KEY = "check.quantity.discount";
-    private static final String CHECK_ENCODING_KEY = "check.encoding";
-    private static final String CHECK_SALE_KEY = "check.sale";
     private final CustomList<Item> list;
     private final int discount;
     private final BigDecimal value;
@@ -36,23 +30,26 @@ public class FormatTxt implements Format {
 
     @Override
     public void setFormat() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
-                PATH, Charset.forName(PropertiesUtil.get(CHECK_ENCODING_KEY)))))) {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(PATH,
+                Charset.forName(PropertiesUtil.getYamlProperties().getCheck().getEncoding()))))) {
             out.println(String.join(System.lineSeparator(),
                     String.format("%26s", RECEIPT),
-                    String.format("%27s", PropertiesUtil.get(CHECK_SUPERMARKET_KEY)),
-                    String.format("%33s", PropertiesUtil.get(CHECK_ADDRESS_KEY)),
-                    String.format("%28s", PropertiesUtil.get(CHECK_PHONE_KEY)),
+                    String.format(
+                            "%27s", PropertiesUtil.getYamlProperties().getCheck().getSupermarketName()),
+                    String.format(
+                            "%33s", PropertiesUtil.getYamlProperties().getCheck().getAddress()),
+                    String.format(
+                            "%28s", PropertiesUtil.getYamlProperties().getCheck().getPhone()),
                     DATE, TIME, DELIMITER.repeat(42),
                     String.format("%-4s%-20s%8s%8s", QTY, DESCRIPTION, PRICE, TOTAL)));
             for (int i = 0; i < list.size(); i++) {
                 String elem;
                 if (list.get(i).isPromotion() && list.get(i).getQuantity()
-                        > Integer.parseInt(PropertiesUtil.get(CHECK_QUANTITY_DISCOUNT_KEY))) {
+                        > PropertiesUtil.getYamlProperties().getCheck().getQuantityDiscount()) {
                     elem = String.format("%-4d%-15s%5s%8.2f%8.2f",
                             list.get(i).getQuantity(),
                             list.get(i).getName(),
-                            PropertiesUtil.get(CHECK_SALE_KEY),
+                            PropertiesUtil.getYamlProperties().getCheck().getSale(),
                             list.get(i).getPrice().multiply(DISCOUNT_VALUE)
                                     .setScale(2, RoundingMode.HALF_UP),
                             list.get(i).getPrice().multiply(DISCOUNT_VALUE)
