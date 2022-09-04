@@ -1,7 +1,5 @@
 package ru.clevertec.repository;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import ru.clevertec.exception.RepositoryException;
 import ru.clevertec.util.ConnectionManager;
 import ru.clevertec.entity.Card;
@@ -11,32 +9,27 @@ import ru.clevertec.task.collection.CustomList;
 import java.sql.*;
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@org.springframework.stereotype.Repository
 public class CardRepository implements Repository<Card> {
 
-    private static final CardRepository INSTANCE = new CardRepository();
-    private static final String SAVE_CARD =
+    private static final String SAVE =
             "insert into cards (number, discount) values (?, ?)";
-    private static final String UPDATE_CARD =
+    private static final String UPDATE =
             "update cards set number = ?, discount = ? where id = ?";
-    private static final String DELETE_CARD =
+    private static final String DELETE =
             "delete from cards where id = ?";
-    private static final String FIND_ALL_CARDS =
+    private static final String FIND_ALL =
             "select id, number, discount from cards limit ? offset ?";
     private static final String FIND_BY_ID =
             "select id, number, discount from cards where id = ?";
     private static final String FIND_BY_NUMBER =
             "select id, number, discount from cards where number = ? limit 1";
 
-    public static CardRepository getInstance() {
-        return INSTANCE;
-    }
-
     @Override
     public Card save(Card card) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(
-                     SAVE_CARD, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                     SAVE, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
             statement.execute();
@@ -53,7 +46,7 @@ public class CardRepository implements Repository<Card> {
     @Override
     public Card update(Card card) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_CARD)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE)) {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
             statement.setInt(3, card.getId());
@@ -68,7 +61,7 @@ public class CardRepository implements Repository<Card> {
     public boolean delete(Integer id) {
         if (findById(id).isPresent()) {
             try (Connection connection = ConnectionManager.get();
-                 PreparedStatement statement = connection.prepareStatement(DELETE_CARD)) {
+                 PreparedStatement statement = connection.prepareStatement(DELETE)) {
                 statement.setInt(1, id);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -83,7 +76,7 @@ public class CardRepository implements Repository<Card> {
     @Override
     public CustomList<Card> findAll(Integer pageSize, Integer page) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_CARDS)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL)) {
             statement.setInt(1, pageSize);
             statement.setInt(2, page);
             ResultSet resultSet = statement.executeQuery();

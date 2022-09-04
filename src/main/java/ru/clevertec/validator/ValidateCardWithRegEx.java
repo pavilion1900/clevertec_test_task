@@ -5,9 +5,9 @@ import java.nio.charset.Charset;
 
 public class ValidateCardWithRegEx implements Validate {
 
-    private static final String INPUT_CARD = "src/main/resources/inputCardData.txt";
-    private static final String INVALID_CARD = "src/main/resources/invalidCardData.txt";
-    private static final String RIGHT_CARD = "src/main/resources/rightCardData.txt";
+    private static final String INPUT_CARD = "src/main/resources/txt/inputCardData.txt";
+    private static final String INVALID_CARD = "src/main/resources/txt/invalidCardData.txt";
+    private static final String RIGHT_CARD = "src/main/resources/txt/rightCardData.txt";
     private static final String ENCODING = "UTF-8";
     private static final String REGEX = "\\d{3}[1-9];(20|1\\d|[1-9])\\b";
 

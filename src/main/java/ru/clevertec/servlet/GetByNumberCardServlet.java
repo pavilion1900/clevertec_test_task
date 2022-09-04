@@ -1,10 +1,13 @@
 package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
-import ru.clevertec.entity.Card;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.clevertec.configuration.CheckConfiguration;
+import ru.clevertec.dto.CardDto;
 import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.CardService;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,14 +19,22 @@ import java.io.PrintWriter;
 @WebServlet("/api/cards/number")
 public class GetByNumberCardServlet extends HttpServlet {
 
-    private final CardService cardService = CardService.getInstance();
+    private CardService service;
+
+    @PostConstruct
+    public void init() {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(CheckConfiguration.class);
+        service = context.getBean("cardService", CardService.class);
+        context.close();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
-            Card card = cardService.findByNumber(req.getParameter("card_number"));
-            String json = new Gson().toJson(card);
+            CardDto cardDto = service.findByNumber(req.getParameter("number"));
+            String json = new Gson().toJson(cardDto);
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);
                 resp.setStatus(200);

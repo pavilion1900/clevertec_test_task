@@ -9,16 +9,16 @@ import java.util.stream.Collectors;
 
 public class ParseOrderArray implements ParseOrder {
 
-    private String[] args;
-    private CustomList<Item> itemList;
-    private CustomList<Card> cardList;
+    private final String[] args;
+    private final CustomList<Item> itemList;
+    private final CustomList<Card> cardList;
     private int discount;
 
     public ParseOrderArray(
             String[] args, CustomList<Item> itemList, CustomList<Card> cardList) {
         this.args = args;
-        this.itemList = itemList;
-        this.cardList = cardList;
+        this.itemList = new CustomArrayList<>(itemList);
+        this.cardList = new CustomArrayList<>(cardList);
     }
 
     @Override

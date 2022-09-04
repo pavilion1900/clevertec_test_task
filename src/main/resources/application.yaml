@@ -1,0 +1,17 @@
+jdbc:
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://127.0.0.1:5432/clevertec_db
+  username: postgres
+  password: 1234
+  poolSize: 10
+
+check:
+  tableWidth: 300
+  supermarketName: "SUPERMARKET 123"
+  address: "12, MILKYWAY Galaxy / Earth"
+  phone: "Tel: 123-456-7890"
+  quantityDiscount: 5
+  discount: 0.9
+  encoding: "UTF-8"
+  sale: "sale"
+  font: "font/FreeSans.ttf"

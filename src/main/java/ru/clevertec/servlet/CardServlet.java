@@ -1,12 +1,15 @@
 package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.clevertec.configuration.CheckConfiguration;
+import ru.clevertec.dto.CardDto;
 import ru.clevertec.entity.Card;
 import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.CardService;
-import ru.clevertec.service.Service;
 import ru.clevertec.task.collection.CustomList;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,14 +21,22 @@ import java.io.PrintWriter;
 @WebServlet("/api/cards")
 public class CardServlet extends HttpServlet {
 
-    private final Service<Card> cardService = CardService.getInstance();
+    private CardService service;
+
+    @PostConstruct
+    public void init() {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(CheckConfiguration.class);
+        service = context.getBean("cardService", CardService.class);
+        context.close();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String pageSize = req.getParameter("page_size");
+        String pageSize = req.getParameter("pageSize");
         String page = req.getParameter("page");
-        CustomList<Card> listOfCards = cardService.findAll(pageSize, page);
+        CustomList<CardDto> listOfCards = service.findAll(pageSize, page);
         String json = new Gson().toJson(listOfCards);
         try (PrintWriter out = resp.getWriter()) {
             out.write(json);
@@ -36,14 +47,9 @@ public class CardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Card cardFromRequest = new Gson().fromJson(req.getReader(), Card.class);
-        int number = cardFromRequest.getNumber();
-        int discount = cardFromRequest.getDiscount();
-        Card card = cardService.save(Card.builder()
-                .number(number)
-                .discount(discount)
-                .build());
-        String json = new Gson().toJson(card);
+        Card card = new Gson().fromJson(req.getReader(), Card.class);
+        CardDto cardDto = service.save(card);
+        String json = new Gson().toJson(cardDto);
         try (PrintWriter out = resp.getWriter()) {
             out.write(json);
             resp.setStatus(200);
@@ -53,13 +59,10 @@ public class CardServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Card cardFromRequest = new Gson().fromJson(req.getReader(), Card.class);
-        int id = cardFromRequest.getId();
-        int number = cardFromRequest.getNumber();
-        int discount = cardFromRequest.getDiscount();
+        Card card = new Gson().fromJson(req.getReader(), Card.class);
         try {
-            Card card = cardService.update(id, new Card(id, number, discount));
-            String json = new Gson().toJson(card);
+            CardDto cardDto = service.update(card.getId(), card);
+            String json = new Gson().toJson(cardDto);
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);
                 resp.setStatus(200);
@@ -72,9 +75,9 @@ public class CardServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("card_id"));
+        int id = Integer.parseInt(req.getParameter("id"));
         try {
-            cardService.delete(id);
+            service.delete(id);
             String json = new Gson().toJson(String.format("Card with id %d deleted", id));
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);

@@ -2,20 +2,21 @@ package ru.clevertec.logic;
 
 import ru.clevertec.format.*;
 import ru.clevertec.entity.Item;
+import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 import java.io.OutputStream;
 import java.math.*;
 
-public class Logics {
+public class LogicImpl implements Logic {
 
-    private CustomList<Item> list;
-    private int discount;
+    private final CustomList<Item> list;
+    private final int discount;
     private BigDecimal value;
-    private OutputStream out;
+    private final OutputStream out;
 
-    public Logics(CustomList<Item> list, int discount, OutputStream out) {
-        this.list = list;
+    public LogicImpl(CustomList<Item> list, int discount, OutputStream out) {
+        this.list = new CustomArrayList<>(list);
         this.discount = discount;
         this.out = out;
         countValue();
@@ -42,6 +43,7 @@ public class Logics {
         }
     }
 
+    @Override
     public BigDecimal getValue() {
         return value;
     }

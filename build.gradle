@@ -5,6 +5,8 @@ plugins {
     id 'org.liquibase.gradle' version '2.1.1'
 }
 
+apply from: "dep_versions.gradle"
+
 sourceSets {
     jmh {
         java.srcDirs = ['src/jmh/java']
@@ -18,6 +20,7 @@ repositories {
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
+    mavenCentral()
 }
 
 configurations {
@@ -25,38 +28,44 @@ configurations {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
-    testImplementation 'org.assertj:assertj-core:3.23.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${versions.junit}"
+    testImplementation "org.assertj:assertj-core:${versions.assertj_core}"
 
-    jmhImplementation 'org.openjdk.jmh:jmh-core:1.33'
-    jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.33'
+    jmhImplementation "org.openjdk.jmh:jmh-core:${versions.jmh}"
+    jmhAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${versions.jmh}"
 
-    implementation 'org.aspectj:aspectjweaver:1.9.6'
+    implementation "org.aspectj:aspectjweaver:${versions.aspectjweaver}"
 
-    implementation 'log4j:log4j:1.2.17'
-    implementation 'org.slf4j:slf4j-log4j12:1.7.30'
+    implementation "log4j:log4j:${versions.log4j}"
+    implementation "org.slf4j:slf4j-log4j12:${versions.slf4j}"
 
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation "com.google.code.gson:gson:${versions.gson}"
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    implementation 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    implementation "org.projectlombok:lombok:${versions.lombok}"
 
-    implementation 'org.postgresql:postgresql:42.4.0'
-    implementation 'com.h2database:h2:2.1.210'
+    implementation "org.postgresql:postgresql:${versions.postgresql}"
+    implementation "com.h2database:h2:${versions.h2}"
 
-    compileOnly 'javax:javaee-api:8.0.1'
-    compileOnly 'javax.servlet:servlet-api:2.5'
+    compileOnly "javax:javaee-api:${versions.javaee_api}"
+    compileOnly "javax.servlet:servlet-api:${versions.servlet_api}"
 
-    implementation 'com.itextpdf:itext7-core:7.0.4'
+    implementation "com.itextpdf:itext7-core:${versions.itext7}"
 
-    liquibaseRuntime 'org.liquibase:liquibase-core:4.14.0'
-    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
-    liquibaseRuntime 'info.picocli:picocli:4.6.3'
-    liquibaseRuntime 'org.yaml:snakeyaml:1.30'
-    liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
-    liquibaseRuntime 'org.postgresql:postgresql:42.4.0'
-    liquibaseRuntime 'com.h2database:h2:2.1.210'
+    liquibaseRuntime "org.liquibase:liquibase-core:${versions.liquibase_core}"
+    liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:${versions.liquibase_groovy}"
+    liquibaseRuntime "info.picocli:picocli:${versions.picocli}"
+    liquibaseRuntime "org.yaml:snakeyaml:${versions.snakeyaml}"
+    liquibaseRuntime "javax.xml.bind:jaxb-api:${versions.jaxb_api}"
+    liquibaseRuntime "org.postgresql:postgresql:${versions.postgresql}"
+    liquibaseRuntime "com.h2database:h2:${versions.h2}"
+
+    implementation "org.yaml:snakeyaml:${versions.snakeyaml}"
+
+    implementation "org.springframework:spring-context:${versions.spring}"
+    implementation "org.springframework:spring-core:${versions.spring}"
+    implementation "org.springframework:spring-beans:${versions.spring}"
 }
 
 group = 'ru.clevertec'

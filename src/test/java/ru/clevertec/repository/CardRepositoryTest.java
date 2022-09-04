@@ -8,38 +8,36 @@ import static org.assertj.core.api.Assertions.*;
 
 public class CardRepositoryTest {
 
-    private static final Integer PAGE_SIZE_DEFAULT = 20;
-    private static final Integer PAGE_DEFAULT = 0;
-    private static CardRepository cardRepository = CardRepository.getInstance();
-
-    @Test
-    void whenSaveCard() {
-        Card card = cardRepository.save(Card.builder().
-                number(1234)
-                .discount(5)
-                .build());
-        assertThat(cardRepository.findById(card.getId()).get()).isEqualTo(card);
-    }
-
-    @Test
-    void whenUpdateCard() {
-        Card card = cardRepository.save(Card.builder().
-                number(1234)
-                .discount(5)
-                .build());
-        card.setDiscount(10);
-        Card updatedCard = cardRepository.update(card);
-        assertThat(cardRepository.findById(card.getId()).get()).isEqualTo(updatedCard);
-    }
-
-    @Test
-    void whenDeleteCard() {
-        Card card = cardRepository.save(Card.builder().
-                number(1234)
-                .discount(5)
-                .build());
-        assertTrue(cardRepository.delete(card.getId()));
-    }
+//    private static CardRepository cardRepository = CardRepository.getInstance();
+//
+//    @Test
+//    void whenSaveCard() {
+//        Card card = cardRepository.save(Card.builder().
+//                number(1234)
+//                .discount(5)
+//                .build());
+//        assertThat(cardRepository.findById(card.getId()).get()).isEqualTo(card);
+//    }
+//
+//    @Test
+//    void whenUpdateCard() {
+//        Card card = cardRepository.save(Card.builder().
+//                number(1234)
+//                .discount(5)
+//                .build());
+//        card.setDiscount(10);
+//        Card updatedCard = cardRepository.update(card);
+//        assertThat(cardRepository.findById(card.getId()).get()).isEqualTo(updatedCard);
+//    }
+//
+//    @Test
+//    void whenDeleteCard() {
+//        Card card = cardRepository.save(Card.builder().
+//                number(1234)
+//                .discount(5)
+//                .build());
+//        assertTrue(cardRepository.delete(card.getId()));
+//    }
 
 //    @Test
 //    void whenFindByNumber() {

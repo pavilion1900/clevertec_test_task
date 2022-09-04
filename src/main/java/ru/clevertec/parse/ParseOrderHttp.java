@@ -1,16 +1,17 @@
 package ru.clevertec.parse;
 
 import ru.clevertec.entity.Item;
+import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
 public class ParseOrderHttp implements ParseOrder {
 
-    private CustomList<Item> itemList;
-    private String[] arrayCount;
-    private int discount;
+    private final CustomList<Item> itemList;
+    private final String[] arrayCount;
+    private final int discount;
 
     public ParseOrderHttp(CustomList<Item> itemList, String[] arrayCount, int discount) {
-        this.itemList = itemList;
+        this.itemList = new CustomArrayList<>(itemList);
         this.arrayCount = arrayCount;
         this.discount = discount;
     }

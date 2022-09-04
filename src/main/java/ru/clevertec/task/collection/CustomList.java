@@ -26,6 +26,8 @@ public interface CustomList<E> extends CustomIterable<E> {
 
     <T> T[] toArray(T[] array);
 
+    E[] toArray();
+
     int size();
 
     void trim();

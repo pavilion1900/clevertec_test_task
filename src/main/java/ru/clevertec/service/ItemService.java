@@ -1,36 +1,60 @@
 package ru.clevertec.service;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import ru.clevertec.dto.ItemDto;
 import ru.clevertec.entity.Item;
 import ru.clevertec.exception.RepositoryException;
 import ru.clevertec.exception.ServiceException;
+import ru.clevertec.mapper.Mapper;
 import ru.clevertec.repository.ItemRepository;
+import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ItemService implements Service<Item> {
+@org.springframework.stereotype.Service
+@RequiredArgsConstructor
+public class ItemService implements Service<ItemDto, Item> {
 
-    private static final ItemService INSTANCE = new ItemService();
     private static final Integer PAGE_SIZE_DEFAULT = 20;
     private static final Integer PAGE_DEFAULT = 0;
-    private final ItemRepository itemRepository = ItemRepository.getInstance();
+    private final ItemRepository repository;
+    private final Mapper<ItemDto, Item> mapper;
 
-    public static ItemService getInstance() {
-        return INSTANCE;
+    @Override
+    public ItemDto save(Item item) {
+        return mapper.map(repository.save(item));
     }
 
     @Override
-    public Item save(Item item) {
-        return itemRepository.save(item);
+    public CustomList<ItemDto> findAll(String pageSizeStr, String pageStr) {
+        Integer pageSize = PAGE_SIZE_DEFAULT;
+        Integer page = PAGE_DEFAULT * pageSize;
+        if (pageSizeStr != null) {
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+        if (pageStr != null) {
+            page = Integer.parseInt(pageStr) * pageSize;
+        }
+        CustomList<ItemDto> itemDtoList = new CustomArrayList<>();
+        repository.findAll(pageSize, page).stream()
+                .map(mapper::map)
+                .forEach(itemDtoList::add);
+        return itemDtoList;
     }
 
     @Override
-    public Item update(Integer id, Item item) {
+    public ItemDto findById(Integer id) {
+        return repository.findById(id)
+                .map(mapper::map)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Item with id %d not found", id)));
+    }
+
+    @Override
+    public ItemDto update(Integer id, Item item) {
         try {
             findById(id);
             item.setId(id);
-            return itemRepository.update(item);
+            return mapper.map(repository.update(item));
         } catch (RepositoryException e) {
             throw new ServiceException(
                     String.format("Item with id %d not updated", id));
@@ -41,30 +65,10 @@ public class ItemService implements Service<Item> {
     public void delete(Integer id) {
         try {
             findById(id);
-            itemRepository.delete(id);
+            repository.delete(id);
         } catch (RepositoryException e) {
             throw new ServiceException(
                     String.format("Item with id %d not deleted", id));
         }
-    }
-
-    @Override
-    public CustomList<Item> findAll(String pageSizeStr, String pageStr) {
-        Integer pageSize = PAGE_SIZE_DEFAULT;
-        Integer page = PAGE_DEFAULT * pageSize;
-        if (pageSizeStr != null) {
-            pageSize = Integer.parseInt(pageSizeStr);
-        }
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr) * pageSize;
-        }
-        return itemRepository.findAll(pageSize, page);
-    }
-
-    @Override
-    public Item findById(Integer id) {
-        return itemRepository.findById(id)
-                .orElseThrow(() -> new ServiceException(
-                        String.format("Item with id %d not found", id)));
     }
 }
