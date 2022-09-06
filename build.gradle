@@ -47,6 +47,7 @@ dependencies {
 
     implementation "org.postgresql:postgresql:${versions.postgresql}"
     implementation "com.h2database:h2:${versions.h2}"
+    implementation "com.mchange:c3p0:${versions.c3p0}"
 
     compileOnly "javax:javaee-api:${versions.javaee_api}"
     compileOnly "javax.servlet:servlet-api:${versions.servlet_api}"
@@ -66,6 +67,10 @@ dependencies {
     implementation "org.springframework:spring-context:${versions.spring}"
     implementation "org.springframework:spring-core:${versions.spring}"
     implementation "org.springframework:spring-beans:${versions.spring}"
+    implementation "org.springframework.data:spring-data-jpa:${versions.spring_data}"
+    implementation "org.springframework:spring-webmvc:${versions.spring}"
+
+    implementation "org.hibernate:hibernate-core:${versions.hibernate}"
 }
 
 group = 'ru.clevertec'

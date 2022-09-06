@@ -34,8 +34,8 @@ public class FormatTxt implements Format {
                 Charset.forName(PropertiesUtil.getYamlProperties().getCheck().getEncoding()))))) {
             out.println(String.join(System.lineSeparator(),
                     String.format("%26s", RECEIPT),
-                    String.format(
-                            "%27s", PropertiesUtil.getYamlProperties().getCheck().getSupermarketName()),
+                    String.format("%27s",
+                            PropertiesUtil.getYamlProperties().getCheck().getSupermarketName()),
                     String.format(
                             "%33s", PropertiesUtil.getYamlProperties().getCheck().getAddress()),
                     String.format(

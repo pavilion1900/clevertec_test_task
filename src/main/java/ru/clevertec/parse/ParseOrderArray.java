@@ -1,6 +1,7 @@
 package ru.clevertec.parse;
 
-import ru.clevertec.entity.*;
+import ru.clevertec.entity.Card;
+import ru.clevertec.entity.Item;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
 

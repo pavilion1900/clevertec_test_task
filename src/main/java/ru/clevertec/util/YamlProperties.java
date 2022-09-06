@@ -9,4 +9,5 @@ public class YamlProperties {
 
     private Jdbc jdbc;
     private Check check;
+    private Hibernate hibernate;
 }
