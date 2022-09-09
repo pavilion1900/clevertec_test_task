@@ -18,4 +18,10 @@ public class Check {
     private String encoding;
     private String sale;
     private String font;
+    private int oneHundred;
+    private int pageSizeDefault;
+    private int pageDefault;
+    private String id;
+    private String count;
+    private String card;
 }

@@ -20,7 +20,7 @@ public interface Format {
     String TIME = String.format("%30s%s", "TIME: ", DATE_TIME.format(FORMATTER_TIME));
     String TIME2 = "TIME: " + DATE_TIME.format(FORMATTER_TIME);
     String DELIMITER = "=";
-    int ONE_HUNDRED = 100;
+    int ONE_HUNDRED = PropertiesUtil.getYamlProperties().getCheck().getOneHundred();
     BigDecimal DISCOUNT_VALUE = PropertiesUtil.getYamlProperties().getCheck().getDiscount();
     String QTY = "QTY";
     String DESCRIPTION = "DESCRIPTION";

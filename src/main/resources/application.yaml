@@ -5,13 +5,24 @@ jdbc:
   password: 1234
   poolSize: 10
 
+hibernate:
+  dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  showSql: true
+  formatSql: true
+
 check:
   tableWidth: 300
-  supermarketName: "SUPERMARKET 123"
-  address: "12, MILKYWAY Galaxy / Earth"
+  supermarketName: SUPERMARKET 123
+  address: 12, MILKYWAY Galaxy / Earth
   phone: "Tel: 123-456-7890"
   quantityDiscount: 5
   discount: 0.9
-  encoding: "UTF-8"
-  sale: "sale"
-  font: "font/FreeSans.ttf"
+  encoding: UTF-8
+  sale: sale
+  font: font/FreeSans.ttf
+  oneHundred: 100
+  pageSizeDefault: 20
+  pageDefault: 0
+  id: id
+  count: count
+  card: card

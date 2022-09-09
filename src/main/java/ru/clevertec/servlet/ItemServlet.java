@@ -1,8 +1,8 @@
 package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.configuration.CheckConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.clevertec.dto.ItemDto;
 import ru.clevertec.entity.Item;
 import ru.clevertec.exception.ServiceException;
@@ -21,14 +21,12 @@ import java.io.PrintWriter;
 @WebServlet("/api/items")
 public class ItemServlet extends HttpServlet {
 
+    @Autowired
     private ItemService service;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(CheckConfiguration.class);
-        service = context.getBean("itemService", ItemService.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @Override

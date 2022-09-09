@@ -1,8 +1,8 @@
 package ru.clevertec.servlet;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.configuration.CheckConfiguration;
-import ru.clevertec.service.CheckServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.clevertec.service.CheckService;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
@@ -10,20 +10,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 @WebServlet("/api/check")
 public class CheckServlet extends HttpServlet {
 
-    private CheckServiceImpl service;
+    @Autowired
+    private CheckService service;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(CheckConfiguration.class);
-        service = context.getBean("checkServiceImpl", CheckServiceImpl.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @Override

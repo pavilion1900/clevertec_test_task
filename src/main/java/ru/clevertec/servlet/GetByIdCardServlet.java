@@ -1,8 +1,8 @@
 package ru.clevertec.servlet;
 
 import com.google.gson.Gson;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.configuration.CheckConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.clevertec.dto.CardDto;
 import ru.clevertec.exception.ServiceException;
 import ru.clevertec.service.CardService;
@@ -19,14 +19,12 @@ import java.io.PrintWriter;
 @WebServlet("/api/cards/id")
 public class GetByIdCardServlet extends HttpServlet {
 
+    @Autowired
     private CardService service;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(CheckConfiguration.class);
-        service = context.getBean("cardService", CardService.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @Override
