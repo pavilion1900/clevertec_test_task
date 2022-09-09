@@ -1,12 +1,12 @@
 package ru.clevertec.service;
 
-import ru.clevertec.task.collection.CustomList;
+import java.util.List;
 
 public interface Service<D, E> {
 
     D save(E entity);
 
-    CustomList<D> findAll(String pageSizeStr, String pageStr);
+    List<D> findAll(String pageSizeStr, String pageStr);
 
     D findById(Integer id);
 

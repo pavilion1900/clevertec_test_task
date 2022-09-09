@@ -14,6 +14,7 @@ ext.versions = [
         'liquibase_groovy': '3.0.2',
         'log4j'           : '1.2.17',
         'lombok'          : '1.18.24',
+        'mapstruct'       : '1.5.2.Final',
         'picocli'         : '4.6.3',
         'postgresql'      : '42.4.2',
         'servlet_api'     : '2.5',

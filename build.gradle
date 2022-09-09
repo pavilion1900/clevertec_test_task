@@ -1,8 +1,9 @@
 plugins {
     id 'java'
-    id 'maven-publish'
-    id "war"
-    id 'org.liquibase.gradle' version '2.1.1'
+    id "io.freefair.lombok" version "6.5.1"
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+
 }
 
 apply from: "dep_versions.gradle"
@@ -16,61 +17,25 @@ sourceSets {
 }
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
     mavenCentral()
 }
 
-configurations {
-    liquibaseRuntime.extendsFrom runtime
-}
-
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:${versions.junit}"
-    testImplementation "org.assertj:assertj-core:${versions.assertj_core}"
-
     jmhImplementation "org.openjdk.jmh:jmh-core:${versions.jmh}"
     jmhAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${versions.jmh}"
 
-    implementation "org.aspectj:aspectjweaver:${versions.aspectjweaver}"
-
-    implementation "log4j:log4j:${versions.log4j}"
-    implementation "org.slf4j:slf4j-log4j12:${versions.slf4j}"
-
-    implementation "com.google.code.gson:gson:${versions.gson}"
-
-    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
-    implementation "org.projectlombok:lombok:${versions.lombok}"
-
-    implementation "org.postgresql:postgresql:${versions.postgresql}"
-    implementation "com.h2database:h2:${versions.h2}"
-    implementation "com.mchange:c3p0:${versions.c3p0}"
-
-    compileOnly "javax:javaee-api:${versions.javaee_api}"
-    compileOnly "javax.servlet:servlet-api:${versions.servlet_api}"
-
     implementation "com.itextpdf:itext7-core:${versions.itext7}"
 
-    liquibaseRuntime "org.liquibase:liquibase-core:${versions.liquibase_core}"
-    liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:${versions.liquibase_groovy}"
-    liquibaseRuntime "info.picocli:picocli:${versions.picocli}"
-    liquibaseRuntime "org.yaml:snakeyaml:${versions.snakeyaml}"
-    liquibaseRuntime "javax.xml.bind:jaxb-api:${versions.jaxb_api}"
-    liquibaseRuntime "org.postgresql:postgresql:${versions.postgresql}"
-    liquibaseRuntime "com.h2database:h2:${versions.h2}"
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
 
-    implementation "org.yaml:snakeyaml:${versions.snakeyaml}"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.liquibase:liquibase-core'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
 
-    implementation "org.springframework:spring-context:${versions.spring}"
-    implementation "org.springframework:spring-core:${versions.spring}"
-    implementation "org.springframework:spring-beans:${versions.spring}"
-    implementation "org.springframework.data:spring-data-jpa:${versions.spring_data}"
-    implementation "org.springframework:spring-webmvc:${versions.spring}"
-
-    implementation "org.hibernate:hibernate-core:${versions.hibernate}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 group = 'ru.clevertec'
@@ -78,21 +43,13 @@ version = '1.0-SNAPSHOT'
 description = 'clevertec_test_task'
 java.sourceCompatibility = JavaVersion.VERSION_14
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 jar {
     manifest {
-        attributes "Main-Class": "ru.clevertec.CheckRunner"
+        attributes "Main-Class": "ru.clevertec.Application"
     }
 }
 
@@ -107,57 +64,3 @@ classes.finalizedBy(jmhClasses)
 test {
     useJUnitPlatform()
 }
-
-liquibase {
-    activities {
-        main {
-            changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-            driver "org.postgresql.Driver"
-            url "jdbc:postgresql://127.0.0.1:5432/clevertec_db"
-            username "postgres"
-            password "1234"
-        }
-        test {
-            changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-            driver "org.h2.Driver"
-            url "jdbc:h2:./testdb;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
-            username ""
-            password ""
-        }
-    }
-}
-
-task deploy_changeLog {
-    doFirst() {
-        liquibase {
-            activities {
-                main {
-                    changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-                    driver "org.postgresql.Driver"
-                    url "jdbc:postgresql://127.0.0.1:5432/clevertec_db"
-                    username "postgres"
-                    password "1234"
-                }
-            }
-        }
-    }
-}
-
-task deploy_test_changeLog {
-    doFirst() {
-        liquibase {
-            activities {
-                test {
-                    changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-                    driver "org.h2.Driver"
-                    url "jdbc:h2:./testdb;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
-                    username ""
-                    password ""
-                }
-            }
-        }
-    }
-}
-
-update.dependsOn(deploy_changeLog, deploy_test_changeLog)
-processResources.dependsOn(update)

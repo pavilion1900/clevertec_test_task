@@ -12,55 +12,48 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
+import lombok.SneakyThrows;
 import ru.clevertec.entity.Item;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
-import ru.clevertec.util.PropertiesUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class FormatPdf implements Format {
 
-    private static final float TABLE_WIDTH =
-            PropertiesUtil.getYamlProperties().getCheck().getTableWidth();
+    private static final String PATH_CHECK = "src/main/resources/doc/check.pdf";
+    private static final String PATH_FONT = "src/main/resources/font/FreeSans.ttf";
+    private static final float TABLE_WIDTH = 300F;
+    private static final String SUPERMARKET_NAME = "SUPERMARKET 123";
+    private static final String ADDRESS = "12, MILKYWAY Galaxy / Earth";
+    private static final String PHONE = "Tel: 123-456-7890";
+    private static final int QUANTITY_DISCOUNT = 5;
+    private static final String SALE = "sale";
     private final CustomList<Item> list;
     private final int discount;
     private final BigDecimal value;
-    private final OutputStream out;
 
-    public FormatPdf(CustomList<Item> list, int discount, BigDecimal value, OutputStream out) {
+    public FormatPdf(CustomList<Item> list, int discount, BigDecimal value) {
         this.list = new CustomArrayList<>(list);
         this.discount = discount;
         this.value = value;
-        this.out = out;
     }
 
     @Override
+    @SneakyThrows
     public void setFormat() {
-        PdfWriter pdfWriter = new PdfWriter(out);
+        PdfWriter pdfWriter = new PdfWriter(PATH_CHECK);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
-        PdfFont pdfFont;
-        try (InputStream in = this.getClass().getClassLoader()
-                .getResourceAsStream(PropertiesUtil.getYamlProperties().getCheck().getFont())) {
-            pdfFont = PdfFontFactory.createFont(in.readAllBytes(), PdfEncodings.IDENTITY_H);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        PdfFont pdfFont = PdfFontFactory.createFont(PATH_FONT, PdfEncodings.IDENTITY_H);
         Document document = new Document(pdfDocument);
         float[] columnWidth = {TABLE_WIDTH};
         Table table = new Table(columnWidth);
         table.addCell(setTextCenter(RECEIPT));
-        table.addCell(setTextCenter(
-                PropertiesUtil.getYamlProperties().getCheck().getSupermarketName()));
-        table.addCell(setTextCenter(
-                PropertiesUtil.getYamlProperties().getCheck().getAddress()));
-        table.addCell(setTextCenter(
-                PropertiesUtil.getYamlProperties().getCheck().getPhone()));
+        table.addCell(setTextCenter(SUPERMARKET_NAME));
+        table.addCell(setTextCenter(ADDRESS));
+        table.addCell(setTextCenter(PHONE));
         float[] columnWidth2 = {TABLE_WIDTH / 2, TABLE_WIDTH / 2};
         Table table2 = new Table(columnWidth2);
         table2.addCell(setTextLeft(CASHIER));
@@ -78,11 +71,10 @@ public class FormatPdf implements Format {
         table3.addCell(setTextRight(TOTAL));
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isPromotion() && list.get(i).getQuantity()
-                    > PropertiesUtil.getYamlProperties().getCheck().getQuantityDiscount()) {
+                    > QUANTITY_DISCOUNT) {
                 table3.addCell(setTextLeft(String.valueOf(list.get(i).getQuantity())));
                 table3.addCell(setTextLeft(list.get(i).getName()));
-                table3.addCell(setTextLeft(
-                        PropertiesUtil.getYamlProperties().getCheck().getSale()));
+                table3.addCell(setTextLeft(SALE));
                 table3.addCell(setTextRight(String.valueOf(list.get(i).getPrice()
                         .multiply(DISCOUNT_VALUE)
                         .setScale(2, RoundingMode.HALF_UP))));
