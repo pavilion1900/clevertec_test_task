@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface CheckService {
 
-    void calculateCheck(Map<String, String[]> map);
+    CheckInfo calculateCheck(Map<String, String[]> map);
 }

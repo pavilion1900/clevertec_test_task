@@ -1,8 +1,11 @@
 package ru.clevertec.format;
 
+import org.springframework.http.ResponseEntity;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public interface Format {
 
@@ -26,5 +29,5 @@ public interface Format {
     String TOTAL = "TOTAL";
     String TAXABLE_TOT = "TAXABLE TOT.";
 
-    void setFormat();
+    ResponseEntity<byte[]> setFormat(Map<String, String[]> map);
 }
