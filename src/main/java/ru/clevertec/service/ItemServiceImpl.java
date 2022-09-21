@@ -1,8 +1,7 @@
 package ru.clevertec.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.ItemDto;
@@ -20,10 +19,6 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    @Value("${check.pageSizeDefault}")
-    private int pageSize;
-    @Value("${check.pageDefault}")
-    private int page;
     private final ItemRepository repository;
     private final ItemMapper mapper;
 
@@ -34,14 +29,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findAll(String pageSizeStr, String pageStr) {
-        if (pageSizeStr != null) {
-            pageSize = Integer.parseInt(pageSizeStr);
-        }
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr);
-        }
-        return repository.findAll(PageRequest.of(page, pageSize)).stream()
+    public List<ItemDto> findAll(Pageable pageable) {
+        return repository.findAll(pageable).stream()
                 .map(mapper::toDto)
                 .collect(toList());
     }

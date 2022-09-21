@@ -29,26 +29,41 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
+import static ru.clevertec.util.Constant.CASHIER;
+import static ru.clevertec.util.Constant.DATE2;
+import static ru.clevertec.util.Constant.DELIMITER;
+import static ru.clevertec.util.Constant.DESCRIPTION;
+import static ru.clevertec.util.Constant.EMPTY;
+import static ru.clevertec.util.Constant.ONE_HUNDRED;
+import static ru.clevertec.util.Constant.PRICE;
+import static ru.clevertec.util.Constant.QTY;
+import static ru.clevertec.util.Constant.RECEIPT;
+import static ru.clevertec.util.Constant.TAXABLE_TOT;
+import static ru.clevertec.util.Constant.TIME2;
+import static ru.clevertec.util.Constant.TOTAL;
+
 @Component
 @RequiredArgsConstructor
 public class FormatPdf implements Format {
 
-    @Value("${check.pathPdfCheck}")
-    private final String pathPdfCheck;
-    @Value("${check.pathFont}")
-    private final String pathFont;
-    @Value("${check.tableWidth}")
-    private final float tableWidth;
-    @Value("${check.supermarketName}")
-    private final String supermarketName;
     @Value("${check.address}")
     private final String address;
-    @Value("${check.phone}")
-    private final String phone;
+    @Value("${check.discountValue}")
+    private final BigDecimal discountValue;
     @Value("${check.quantityDiscount}")
     private final int quantityDiscount;
+    @Value("${check.pathFont}")
+    private final String pathFont;
+    @Value("${check.pathPdfCheck}")
+    private final String pathPdfCheck;
+    @Value("${check.phone}")
+    private final String phone;
     @Value("${check.sale}")
     private final String sale;
+    @Value("${check.supermarketName}")
+    private final String supermarketName;
+    @Value("${check.tableWidth}")
+    private final float tableWidth;
     private final CheckService service;
 
     @Override
@@ -91,10 +106,10 @@ public class FormatPdf implements Format {
                 table3.addCell(setTextLeft(list.get(i).getName()));
                 table3.addCell(setTextLeft(sale));
                 table3.addCell(setTextRight(String.valueOf(list.get(i).getPrice()
-                        .multiply(DISCOUNT_VALUE)
+                        .multiply(discountValue)
                         .setScale(2, RoundingMode.HALF_UP))));
                 table3.addCell(setTextRight(String.valueOf(list.get(i).getPrice()
-                        .multiply(DISCOUNT_VALUE)
+                        .multiply(discountValue)
                         .setScale(2, RoundingMode.HALF_UP)
                         .multiply(BigDecimal.valueOf(list.get(i).getQuantity())))));
             } else {

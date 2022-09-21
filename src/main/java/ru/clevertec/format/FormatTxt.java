@@ -21,24 +21,37 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
+import static ru.clevertec.util.Constant.DATE;
+import static ru.clevertec.util.Constant.DELIMITER;
+import static ru.clevertec.util.Constant.DESCRIPTION;
+import static ru.clevertec.util.Constant.ONE_HUNDRED;
+import static ru.clevertec.util.Constant.PRICE;
+import static ru.clevertec.util.Constant.QTY;
+import static ru.clevertec.util.Constant.RECEIPT;
+import static ru.clevertec.util.Constant.TAXABLE_TOT;
+import static ru.clevertec.util.Constant.TIME;
+import static ru.clevertec.util.Constant.TOTAL;
+
 @Component
 @RequiredArgsConstructor
 public class FormatTxt implements Format {
 
-    @Value("${check.pathTxtCheck}")
-    private final String pathTxtCheck;
-    @Value("${check.encoding}")
-    private final String encoding;
-    @Value("${check.supermarketName}")
-    private final String supermarketName;
     @Value("${check.address}")
     private final String address;
+    @Value("${check.discountValue}")
+    private final BigDecimal discountValue;
+    @Value("${check.encoding}")
+    private final String encoding;
+    @Value("${check.pathTxtCheck}")
+    private final String pathTxtCheck;
     @Value("${check.phone}")
     private final String phone;
     @Value("${check.quantityDiscount}")
     private final int quantityDiscount;
     @Value("${check.sale}")
     private final String sale;
+    @Value("${check.supermarketName}")
+    private final String supermarketName;
     private final CheckService service;
 
     @Override
@@ -65,9 +78,9 @@ public class FormatTxt implements Format {
                             list.get(i).getQuantity(),
                             list.get(i).getName(),
                             sale,
-                            list.get(i).getPrice().multiply(DISCOUNT_VALUE)
+                            list.get(i).getPrice().multiply(discountValue)
                                     .setScale(2, RoundingMode.HALF_UP),
-                            list.get(i).getPrice().multiply(DISCOUNT_VALUE)
+                            list.get(i).getPrice().multiply(discountValue)
                                     .setScale(2, RoundingMode.HALF_UP)
                                     .multiply(BigDecimal.valueOf(list.get(i).getQuantity())));
                 } else {

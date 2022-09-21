@@ -11,7 +11,7 @@ import ru.clevertec.format.Format;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/check")
+@RequestMapping("/api/v1/check")
 @RequiredArgsConstructor
 public class CheckRESTController {
 

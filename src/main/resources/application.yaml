@@ -10,17 +10,18 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         show_sql: true
         format_sql: true
+  data:
+    web:
+      pageable:
+        default-page-size: 20
 
 check:
   address: 12, MILKYWAY Galaxy / Earth
   card: card
   count: count
-  discount: 0.9
+  discountValue: 0.9
   encoding: UTF-8
   id: id
-  oneHundred: 100
-  pageSizeDefault: 20
-  pageDefault: 0
   pathPdfCheck: src/main/resources/doc/check.pdf
   pathTxtCheck: src/main/resources/doc/check.txt
   pathFont: src/main/resources/font/FreeSans.ttf

@@ -10,6 +10,7 @@ import ru.clevertec.repository.CardRepository;
 import ru.clevertec.repository.ItemRepository;
 import ru.clevertec.task.collection.CustomArrayList;
 import ru.clevertec.task.collection.CustomList;
+import ru.clevertec.util.Constant;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,10 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CheckServiceImpl implements CheckService {
 
-    @Value("${check.discount}")
-    private final BigDecimal discount;
-    @Value("${check.oneHundred}")
-    private final int oneHundred;
+    @Value("${check.discountValue}")
+    private final BigDecimal discountValue;
     @Value("${check.quantityDiscount}")
     private final int quantityDiscount;
     @Value("${check.id}")
@@ -64,15 +63,15 @@ public class CheckServiceImpl implements CheckService {
             if (itemList.get(i).isPromotion() && itemList.get(i).getQuantity()
                     > quantityDiscount) {
                 value = value.add(itemList.get(i).getPrice()
-                        .multiply(this.discount)
+                        .multiply(discountValue)
                         .setScale(2, RoundingMode.HALF_UP)
                         .multiply(BigDecimal.valueOf(itemList.get(i).getQuantity()))
                 );
             } else {
                 value = value.add(itemList.get(i).getPrice()
-                        .multiply(new BigDecimal(oneHundred)
+                        .multiply(new BigDecimal(Constant.ONE_HUNDRED)
                                 .subtract(new BigDecimal(discount))
-                                .divide(new BigDecimal(oneHundred)))
+                                .divide(new BigDecimal(Constant.ONE_HUNDRED)))
                         .setScale(2, RoundingMode.HALF_UP)
                         .multiply(BigDecimal.valueOf(itemList.get(i).getQuantity()))
                 );
