@@ -4,3 +4,6 @@ target
 .gradle/
 build/
 *.db
+*.log
+*.pdf
+check.txt

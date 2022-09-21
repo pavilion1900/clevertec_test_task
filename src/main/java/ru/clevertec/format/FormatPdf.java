@@ -12,63 +12,86 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import ru.clevertec.entity.Item;
-import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.service.CheckInfo;
+import ru.clevertec.service.CheckService;
 import ru.clevertec.task.collection.CustomList;
-import ru.clevertec.util.PropertiesUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 
+import static ru.clevertec.util.Constant.CASHIER;
+import static ru.clevertec.util.Constant.DATE2;
+import static ru.clevertec.util.Constant.DELIMITER;
+import static ru.clevertec.util.Constant.DESCRIPTION;
+import static ru.clevertec.util.Constant.EMPTY;
+import static ru.clevertec.util.Constant.ONE_HUNDRED;
+import static ru.clevertec.util.Constant.PRICE;
+import static ru.clevertec.util.Constant.QTY;
+import static ru.clevertec.util.Constant.RECEIPT;
+import static ru.clevertec.util.Constant.TAXABLE_TOT;
+import static ru.clevertec.util.Constant.TIME2;
+import static ru.clevertec.util.Constant.TOTAL;
+
+@Component
+@RequiredArgsConstructor
 public class FormatPdf implements Format {
 
-    private static final float TABLE_WIDTH =
-            PropertiesUtil.getYamlProperties().getCheck().getTableWidth();
-    private final CustomList<Item> list;
-    private final int discount;
-    private final BigDecimal value;
-    private final OutputStream out;
-
-    public FormatPdf(CustomList<Item> list, int discount, BigDecimal value, OutputStream out) {
-        this.list = new CustomArrayList<>(list);
-        this.discount = discount;
-        this.value = value;
-        this.out = out;
-    }
+    @Value("${check.address}")
+    private final String address;
+    @Value("${check.discountValue}")
+    private final BigDecimal discountValue;
+    @Value("${check.quantityDiscount}")
+    private final int quantityDiscount;
+    @Value("${check.pathFont}")
+    private final String pathFont;
+    @Value("${check.pathPdfCheck}")
+    private final String pathPdfCheck;
+    @Value("${check.phone}")
+    private final String phone;
+    @Value("${check.sale}")
+    private final String sale;
+    @Value("${check.supermarketName}")
+    private final String supermarketName;
+    @Value("${check.tableWidth}")
+    private final float tableWidth;
+    private final CheckService service;
 
     @Override
-    public void setFormat() {
-        PdfWriter pdfWriter = new PdfWriter(out);
+    @SneakyThrows
+    public ResponseEntity<byte[]> setFormat(Map<String, String[]> map) {
+        CheckInfo checkInfo = service.calculateCheck(map);
+        CustomList<Item> list = checkInfo.getItemList();
+        int discount = checkInfo.getCard().getDiscount();
+        BigDecimal value = checkInfo.getValue();
+        PdfWriter pdfWriter = new PdfWriter(pathPdfCheck);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
-        PdfFont pdfFont;
-        try (InputStream in = this.getClass().getClassLoader()
-                .getResourceAsStream(PropertiesUtil.getYamlProperties().getCheck().getFont())) {
-            pdfFont = PdfFontFactory.createFont(in.readAllBytes(), PdfEncodings.IDENTITY_H);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        PdfFont pdfFont = PdfFontFactory.createFont(pathFont, PdfEncodings.IDENTITY_H);
         Document document = new Document(pdfDocument);
-        float[] columnWidth = {TABLE_WIDTH};
+        float[] columnWidth = {tableWidth};
         Table table = new Table(columnWidth);
         table.addCell(setTextCenter(RECEIPT));
-        table.addCell(setTextCenter(
-                PropertiesUtil.getYamlProperties().getCheck().getSupermarketName()));
-        table.addCell(setTextCenter(
-                PropertiesUtil.getYamlProperties().getCheck().getAddress()));
-        table.addCell(setTextCenter(
-                PropertiesUtil.getYamlProperties().getCheck().getPhone()));
-        float[] columnWidth2 = {TABLE_WIDTH / 2, TABLE_WIDTH / 2};
+        table.addCell(setTextCenter(supermarketName));
+        table.addCell(setTextCenter(address));
+        table.addCell(setTextCenter(phone));
+        float[] columnWidth2 = {tableWidth / 2, tableWidth / 2};
         Table table2 = new Table(columnWidth2);
         table2.addCell(setTextLeft(CASHIER));
         table2.addCell(setTextLeft(DATE2));
         table2.addCell(setTextLeft(EMPTY));
         table2.addCell(setTextLeft(TIME2));
-        float[] columnWidth3 = {TABLE_WIDTH * 0.1F, TABLE_WIDTH * 0.4F, TABLE_WIDTH * 0.18F,
-                TABLE_WIDTH * 0.17F, TABLE_WIDTH * 0.15F};
+        float[] columnWidth3 = {tableWidth * 0.1F, tableWidth * 0.4F, tableWidth * 0.18F,
+                tableWidth * 0.17F, tableWidth * 0.15F};
         Table table3 = new Table(columnWidth3);
         table3.setFont(pdfFont);
         table3.addCell(setTextLeft(QTY));
@@ -78,16 +101,15 @@ public class FormatPdf implements Format {
         table3.addCell(setTextRight(TOTAL));
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isPromotion() && list.get(i).getQuantity()
-                    > PropertiesUtil.getYamlProperties().getCheck().getQuantityDiscount()) {
+                    > quantityDiscount) {
                 table3.addCell(setTextLeft(String.valueOf(list.get(i).getQuantity())));
                 table3.addCell(setTextLeft(list.get(i).getName()));
-                table3.addCell(setTextLeft(
-                        PropertiesUtil.getYamlProperties().getCheck().getSale()));
+                table3.addCell(setTextLeft(sale));
                 table3.addCell(setTextRight(String.valueOf(list.get(i).getPrice()
-                        .multiply(DISCOUNT_VALUE)
+                        .multiply(discountValue)
                         .setScale(2, RoundingMode.HALF_UP))));
                 table3.addCell(setTextRight(String.valueOf(list.get(i).getPrice()
-                        .multiply(DISCOUNT_VALUE)
+                        .multiply(discountValue)
                         .setScale(2, RoundingMode.HALF_UP)
                         .multiply(BigDecimal.valueOf(list.get(i).getQuantity())))));
             } else {
@@ -107,7 +129,7 @@ public class FormatPdf implements Format {
                         .multiply(BigDecimal.valueOf(list.get(i).getQuantity())))));
             }
         }
-        float[] columnWidth4 = {TABLE_WIDTH * 0.67F, TABLE_WIDTH * 0.33F};
+        float[] columnWidth4 = {tableWidth * 0.67F, tableWidth * 0.33F};
         Table table4 = new Table(columnWidth4);
         table4.addCell(setTextLeft(TAXABLE_TOT));
         table4.addCell(setTextRight(String.valueOf(value)));
@@ -118,19 +140,24 @@ public class FormatPdf implements Format {
         document.add(new Paragraph(DELIMITER.repeat(42)));
         document.add(table4);
         document.close();
+        byte[] content = Files.readAllBytes(Path.of(pathPdfCheck));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(content.length)
+                .body(content);
     }
 
-    public static Cell setTextCenter(String text) {
+    private static Cell setTextCenter(String text) {
         return new Cell().add(text).setBorder(Border.NO_BORDER)
                 .setTextAlignment(TextAlignment.CENTER);
     }
 
-    public static Cell setTextRight(String text) {
+    private static Cell setTextRight(String text) {
         return new Cell().add(text).setBorder(Border.NO_BORDER)
                 .setTextAlignment(TextAlignment.RIGHT);
     }
 
-    public static Cell setTextLeft(String text) {
+    private static Cell setTextLeft(String text) {
         return new Cell().add(text).setBorder(Border.NO_BORDER);
     }
 }

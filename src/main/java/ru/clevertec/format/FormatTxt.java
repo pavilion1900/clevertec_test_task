@@ -1,58 +1,86 @@
 package ru.clevertec.format;
 
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import ru.clevertec.entity.Item;
-import ru.clevertec.task.collection.CustomArrayList;
+import ru.clevertec.service.CheckInfo;
+import ru.clevertec.service.CheckService;
 import ru.clevertec.task.collection.CustomList;
-import ru.clevertec.util.PropertiesUtil;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 
+import static ru.clevertec.util.Constant.DATE;
+import static ru.clevertec.util.Constant.DELIMITER;
+import static ru.clevertec.util.Constant.DESCRIPTION;
+import static ru.clevertec.util.Constant.ONE_HUNDRED;
+import static ru.clevertec.util.Constant.PRICE;
+import static ru.clevertec.util.Constant.QTY;
+import static ru.clevertec.util.Constant.RECEIPT;
+import static ru.clevertec.util.Constant.TAXABLE_TOT;
+import static ru.clevertec.util.Constant.TIME;
+import static ru.clevertec.util.Constant.TOTAL;
+
+@Component
+@RequiredArgsConstructor
 public class FormatTxt implements Format {
 
-    //    private static final String PATH = "src/main/resources/check.txt";
-    private static final String PATH =
-            "C:\\projects\\clevertec_test_task\\src\\main\\resources\\txt\\check.txt";
-    private final CustomList<Item> list;
-    private final int discount;
-    private final BigDecimal value;
-
-    public FormatTxt(CustomList<Item> list, int discount, BigDecimal value) {
-        this.list = new CustomArrayList<>(list);
-        this.discount = discount;
-        this.value = value;
-    }
+    @Value("${check.address}")
+    private final String address;
+    @Value("${check.discountValue}")
+    private final BigDecimal discountValue;
+    @Value("${check.encoding}")
+    private final String encoding;
+    @Value("${check.pathTxtCheck}")
+    private final String pathTxtCheck;
+    @Value("${check.phone}")
+    private final String phone;
+    @Value("${check.quantityDiscount}")
+    private final int quantityDiscount;
+    @Value("${check.sale}")
+    private final String sale;
+    @Value("${check.supermarketName}")
+    private final String supermarketName;
+    private final CheckService service;
 
     @Override
-    public void setFormat() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(PATH,
-                Charset.forName(PropertiesUtil.getYamlProperties().getCheck().getEncoding()))))) {
+    @SneakyThrows
+    public ResponseEntity<byte[]> setFormat(Map<String, String[]> map) {
+        CheckInfo checkInfo = service.calculateCheck(map);
+        CustomList<Item> list = checkInfo.getItemList();
+        int discount = checkInfo.getCard().getDiscount();
+        BigDecimal value = checkInfo.getValue();
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(pathTxtCheck,
+                Charset.forName(encoding))))) {
             out.println(String.join(System.lineSeparator(),
                     String.format("%26s", RECEIPT),
-                    String.format("%27s",
-                            PropertiesUtil.getYamlProperties().getCheck().getSupermarketName()),
-                    String.format(
-                            "%33s", PropertiesUtil.getYamlProperties().getCheck().getAddress()),
-                    String.format(
-                            "%28s", PropertiesUtil.getYamlProperties().getCheck().getPhone()),
+                    String.format("%27s", supermarketName),
+                    String.format("%33s", address),
+                    String.format("%28s", phone),
                     DATE, TIME, DELIMITER.repeat(42),
                     String.format("%-4s%-20s%8s%8s", QTY, DESCRIPTION, PRICE, TOTAL)));
             for (int i = 0; i < list.size(); i++) {
                 String elem;
                 if (list.get(i).isPromotion() && list.get(i).getQuantity()
-                        > PropertiesUtil.getYamlProperties().getCheck().getQuantityDiscount()) {
+                        > quantityDiscount) {
                     elem = String.format("%-4d%-15s%5s%8.2f%8.2f",
                             list.get(i).getQuantity(),
                             list.get(i).getName(),
-                            PropertiesUtil.getYamlProperties().getCheck().getSale(),
-                            list.get(i).getPrice().multiply(DISCOUNT_VALUE)
+                            sale,
+                            list.get(i).getPrice().multiply(discountValue)
                                     .setScale(2, RoundingMode.HALF_UP),
-                            list.get(i).getPrice().multiply(DISCOUNT_VALUE)
+                            list.get(i).getPrice().multiply(discountValue)
                                     .setScale(2, RoundingMode.HALF_UP)
                                     .multiply(BigDecimal.valueOf(list.get(i).getQuantity())));
                 } else {
@@ -74,8 +102,11 @@ public class FormatTxt implements Format {
             }
             out.println(DELIMITER.repeat(42));
             out.printf("%-12s%28.2f\n", TAXABLE_TOT, value);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        byte[] content = Files.readAllBytes(Path.of(pathTxtCheck));
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .contentLength(content.length)
+                .body(content);
     }
 }
